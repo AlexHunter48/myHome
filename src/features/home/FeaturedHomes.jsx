@@ -184,8 +184,9 @@ export default function FeaturedHomes() {
           ))}
         </div>
 
-        <div className="mt-12 grid overflow-hidden rounded-3xl border border-neutral-200/70 bg-white/60 md:grid-cols-3 gap-x-6">
+        <div className="mt-12 lg:mt-20 grid overflow-hidden rounded-3xl border border-neutral-200/70 bg-white/60 md:grid-cols-3 gap-x-6">
           <TrustItem
+            si
             icon="✓"
             title="Verified owners"
             description="Every property is listed by verified owners."
@@ -211,7 +212,7 @@ export default function FeaturedHomes() {
 function TrustItem({ icon, title, description }) {
   return (
     <div className="flex items-center gap-4 border-neutral-200/70 p-6 md:border-r md:last:border-r-0 lg:px-8">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1b3b2b] text-lg text-white">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#1b3b2b] text-xl text-white">
         {icon}
       </div>
 

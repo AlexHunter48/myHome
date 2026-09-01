@@ -3,6 +3,12 @@ import Navbar from "./Navbar";
 import modernHome from "../../assets/modern-home.png";
 
 import FeaturedHomes from "../../features/home/FeaturedHomes";
+import ExploreLocations from "../../locations/ExploreLocations";
+import Insights from "../../features/home/Insights";
+import TrustSection from "../../features/home/TrustSection";
+import HowItWorks from "../../features/home/HowItWorks";
+import CTA from "../../features/home/CTA";
+import Footer from "./Footer";
 
 export default function AppLayout() {
   return (
@@ -36,11 +42,17 @@ export default function AppLayout() {
 
         <Navbar />
 
-        <div className="overflow-scroll">
+        <div>
           <Hero />
         </div>
       </div>
       <FeaturedHomes />
+      <ExploreLocations />
+      <Insights />
+      <TrustSection />
+      <HowItWorks />
+      <CTA />
+      <Footer />
     </div>
   );
 }

@@ -1,36 +1,30 @@
 import { useState } from "react";
 import {
-  Bath,
-  BedDouble,
-  Heart,
-  MapPin,
-  Ruler,
-  TrendingUp,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Heart,
+  MapPin,
 } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeCard({
-  image,
+  image = "",
   images = [],
   price,
   period,
   title,
   location,
   type = "For Sale",
-  beds,
-  baths,
-  area,
-  insight,
-  insightText,
   verified = true,
 }) {
-  const propertyImages = image.length > 0 ? image : [images];
-
-  console.log(images.length);
+  const navigate = useNavigate();
+  const propertyImages = images.length > 0 ? images : image ? [image] : [];
 
   const [currentImage, setCurrentImage] = useState(0);
+
+  const { isAuthenticated } = useAuth();
 
   const nextImage = (e) => {
     e.stopPropagation();
@@ -48,52 +42,67 @@ export default function HomeCard({
     );
   };
 
-  return (
-    <article className="group overflow-hidden rounded-3xl border border-neutral-200/70 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <img
-          src={propertyImages[currentImage]}
-          alt={`${title} - image ${currentImage + 1}`}
-          className="h-full w-full object-cover transition duration-500"
-        />
+  const goToImage = (e, index) => {
+    e.stopPropagation();
+    setCurrentImage(index);
+  };
 
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/5" />
+  return (
+    <article className="group w-full overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)]">
+      <div className="relative aspect-[1.35/1] overflow-hidden bg-neutral-100">
+        {propertyImages.length > 0 ? (
+          <img
+            src={propertyImages[currentImage]}
+            alt={`${title} - image ${currentImage + 1}`}
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm text-neutral-400">
+            No image available
+          </div>
+        )}
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/5" />
 
         {verified && (
-          <div className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-[#1b3b2b] shadow-sm backdrop-blur">
-            <CheckCircle2 className="h-3.5 w-3.5 fill-[#1b3b2b]  text-[var(--color-primary)]" />
-            Verified owner
+          <div className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-[#1b3b2b] shadow-sm backdrop-blur-md">
+            <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2} />
+
+            <span>Verified owner</span>
           </div>
         )}
 
         <button
           type="button"
           aria-label="Save property"
-          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-neutral-800 shadow-sm backdrop-blur transition hover:scale-105 hover:bg-white"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isAuthenticated) navigate("/auth");
+          }}
+          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-white"
         >
-          <Heart className="h-[19px] w-[19px]" strokeWidth={1.8} />
+          <Heart className="h-[18px] w-[18px]" strokeWidth={1.8} />
         </button>
 
         {propertyImages.length > 1 && (
           <button
             type="button"
-            onClick={previousImage}
             aria-label="Previous image"
-            className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur transition-all duration-200 hover:bg-white group-hover:opacity-100"
+            onClick={previousImage}
+            className="absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white group-hover:opacity-100"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4" strokeWidth={2} />
           </button>
         )}
 
         {propertyImages.length > 1 && (
           <button
             type="button"
-            onClick={nextImage}
             aria-label="Next image"
-            className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur transition-all duration-200 hover:bg-white group-hover:opacity-100"
+            onClick={nextImage}
+            className="absolute right-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white group-hover:opacity-100"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-4 w-4" strokeWidth={2} />
           </button>
         )}
 
@@ -104,10 +113,7 @@ export default function HomeCard({
                 key={index}
                 type="button"
                 aria-label={`Go to image ${index + 1}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentImage(index);
-                }}
+                onClick={(e) => goToImage(e, index)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   currentImage === index
                     ? "w-5 bg-white"
@@ -119,30 +125,16 @@ export default function HomeCard({
         )}
 
         {propertyImages.length > 1 && (
-          <div className="absolute bottom-4 right-4 rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
+          <div className="absolute bottom-4 right-4 rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur-md">
             {currentImage + 1} / {propertyImages.length}
-          </div>
-        )}
-
-        {insight && (
-          <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-xl bg-[#51458a]/95 px-3 py-2 text-white shadow-lg backdrop-blur">
-            <TrendingUp className="h-4 w-4" />
-
-            <div className="leading-tight">
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-white/80">
-                Market insight
-              </p>
-
-              <p className="text-xs font-medium">{insightText}</p>
-            </div>
           </div>
         )}
       </div>
 
-      <div className="p-5">
-        <div className="flex items-start justify-between gap-3">
+      <div className="px-5 pb-5 pt-4.5">
+        <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-lg font-semibold tracking-tight text-neutral-950">
+            <p className="text-[19px] font-semibold tracking-[-0.02em] text-neutral-950">
               {price}
 
               {period && (
@@ -153,35 +145,19 @@ export default function HomeCard({
             </p>
           </div>
 
-          <span className="shrink-0 rounded-full bg-[#eaf0ec] px-3 py-1 text-xs font-semibold text-[#1b3b2b]">
+          <span className="shrink-0 rounded-full bg-[#eaf0ec] px-3 py-1 text-[11px] font-semibold text-[#1b3b2b]">
             {type}
           </span>
         </div>
 
-        <h3 className="mt-3 line-clamp-1 text-[15px] font-semibold text-neutral-900">
+        <h3 className="mt-2.5 truncate text-[15px] font-semibold tracking-[-0.01em] text-neutral-900">
           {title}
         </h3>
 
         <div className="mt-2 flex items-center gap-1.5 text-sm text-neutral-500">
-          <MapPin className="h-4 w-4 shrink-0" strokeWidth={1.8} />
-          <span>{location}</span>
-        </div>
+          <MapPin className="h-4 w-4 shrink-0" strokeWidth={1.7} />
 
-        <div className="mt-5 flex items-center border-t border-neutral-100 pt-4 text-xs text-neutral-600">
-          <div className="flex flex-1 items-center gap-2">
-            <BedDouble className="h-4 w-4" strokeWidth={1.7} />
-            <span>{beds} Beds</span>
-          </div>
-
-          <div className="flex flex-1 items-center gap-2 border-l border-neutral-200 pl-4">
-            <Bath className="h-4 w-4" strokeWidth={1.7} />
-            <span>{baths} Baths</span>
-          </div>
-
-          <div className="flex flex-1 items-center gap-2 border-l border-neutral-200 pl-4">
-            <Ruler className="h-4 w-4" strokeWidth={1.7} />
-            <span>{area}</span>
-          </div>
+          <span className="truncate">{location}</span>
         </div>
       </div>
     </article>

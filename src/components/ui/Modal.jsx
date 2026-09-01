@@ -17,18 +17,30 @@ export default function Modal({ children }) {
   );
 }
 
-function Open({ children, opens: opensWindowName }) {
-  const { open } = useContext(ModalContext);
+function Open({ children, opens: opensWindowName, toggle = false }) {
+  const { open, openName, close } = useContext(ModalContext);
 
   return cloneElement(children, {
     onClick: (e) => {
       e.stopPropagation();
-      open(opensWindowName);
+
+      if (toggle && openName === opensWindowName) {
+        console.log("CLOSING");
+        close();
+      } else {
+        console.log("OPENING", opensWindowName);
+        open(opensWindowName);
+      }
     },
   });
 }
 
-function Window({ children, name, positionClasses = "left-0" }) {
+function Window({
+  children,
+  name,
+  positionClasses = "left-0",
+  showOverlay = false,
+}) {
   const { openName, close } = useContext(ModalContext);
 
   const isOpen = name === openName;
