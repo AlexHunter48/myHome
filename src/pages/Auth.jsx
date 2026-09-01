@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useSignUp from "../features/auth/useSignup";
+
 import {
   ArrowRight,
   Eye,
@@ -13,11 +14,15 @@ import {
   UserRound,
 } from "lucide-react";
 import myhome from "../assets/myhome-logo-exact.svg";
+import useLogIn from "../features/auth/useLogin";
 
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { signUp, isPending } = useSignUp();
+  const { logIn } = useLogIn();
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -40,11 +45,21 @@ export default function Auth() {
           },
         },
       );
-      console.log(data.password);
+
       return;
     }
-
-    console.log("Sign in:", data);
+    logIn(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          reset();
+          navigate("/properties");
+        },
+      },
+    );
   }
 
   function switchMode() {
@@ -98,9 +113,13 @@ export default function Auth() {
 
         <section className="flex min-h-screen items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
           <div className="w-full max-w-md">
-            <Link to="/" className="mb-12 flex items-center gap-2.5 lg:hidden">
+            <Link to="/" className="mb-12 flex items-center gap-2 lg:hidden">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf0ec] text-[#1b3b2b]">
-                <Home size={20} strokeWidth={1.7} />
+                <img
+                  src={myhome}
+                  alt="MyHome"
+                  className="h-6 w-auto shrink-0 object-contain lg:h-8 relative left-[-0.1px]"
+                />
               </div>
 
               <span className="text-2xl font-medium tracking-tight text-[#1b3b2b]">
@@ -180,6 +199,10 @@ export default function Auth() {
                       autoComplete="name"
                       {...register("fullName", {
                         required: "Your full name is required",
+                        minLength: {
+                          value: 2,
+                          message: "Name must be at least 2 characters",
+                        },
                       })}
                       className="h-12 w-full rounded-2xl border border-neutral-200 bg-white pl-11 pr-4 text-sm outline-none transition placeholder:text-neutral-400 focus:border-[#1b3b2b] focus:ring-4 focus:ring-[#1b3b2b]/5"
                     />
