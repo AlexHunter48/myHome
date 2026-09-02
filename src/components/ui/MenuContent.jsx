@@ -1,4 +1,17 @@
+import { useNavigate } from "react-router-dom";
+import useLogOut from "../../features/auth/useLogout";
+
 export default function MenuContent({ isAuthenticated }) {
+  const navigate = useNavigate();
+  const { logOut, isPending } = useLogOut();
+  function handleLogout() {
+    logOut(
+      {},
+      {
+        onSuccess: () => navigate("/"),
+      },
+    );
+  }
   return (
     <>
       {isAuthenticated ? (
@@ -73,9 +86,11 @@ export default function MenuContent({ isAuthenticated }) {
 
           <button
             type="button"
+            onClick={handleLogout}
+            disabled={isPending}
             className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-semibold text-red-600 transition hover:bg-red-50"
           >
-            Sign out
+            {isPending ? "Signing out" : "Sign out"}
           </button>
         </>
       ) : (

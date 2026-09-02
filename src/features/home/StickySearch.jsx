@@ -20,6 +20,7 @@ export default function StickySearch({ location, setLocation }) {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const { isAuthenticated } = useAuth();
+
   return (
     <Modal>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-neutral-200/70 bg-[var(--color-background)]/95 shadow-sm backdrop-blur-xl">
