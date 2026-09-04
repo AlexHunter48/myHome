@@ -37,7 +37,7 @@ export default function StickySearch({ location, setLocation }) {
           </div>
 
           <div className="ml-auto flex min-w-0 items-center lg:mx-auto lg:mt-1">
-            <div className="flex w-[min(760px,calc(100vw-130px))] items-center rounded-full border border-neutral-200 bg-white p-1 shadow-sm lg:w-[min(760px,55vw)] lg:p-1.5">
+            <div className="flex w-[min(760px,calc(100vw-138px))] items-center rounded-full border border-neutral-200 bg-white p-1 shadow-sm lg:w-[min(760px,55vw)] lg:p-1.5">
               <Modal.Open opens="where">
                 <button
                   type="button"
@@ -297,10 +297,27 @@ export default function StickySearch({ location, setLocation }) {
           <div className="hidden items-center justify-end gap-1 lg:flex">
             <Link
               to="#"
+              className="
+    whitespace-nowrap
+    rounded-full
+    px-4
+    py-2.5
+    text-sm
+    font-semibold
+    text-[#1b3b2b]
+    transition-all
+    duration-200
+    hover:bg-[#EAF0EC]
+  "
+            >
+              List your property
+            </Link>
+            <Link
+              to="#"
               aria-label="Saved properties"
               className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-neutral-100 hover:text-[var(--color-primary)]"
             >
-              <Heart size={22} strokeWidth={1.8} />
+              <Heart size={18} strokeWidth={1.8} />
             </Link>
 
             <Link
@@ -308,7 +325,7 @@ export default function StickySearch({ location, setLocation }) {
               aria-label="Account"
               className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-neutral-100 hover:text-[var(--color-primary)]"
             >
-              <CircleUserRound size={22} strokeWidth={1.8} />
+              <CircleUserRound size={18} strokeWidth={1.8} />
             </Link>
 
             <Modal.Open opens="menu" toggle>
@@ -320,6 +337,37 @@ export default function StickySearch({ location, setLocation }) {
               name="menu"
               className="w-72 p-2 "
               positionClasses="right-3  "
+            >
+              <MenuContent isAuthenticated={isAuthenticated} />
+            </Modal.Window>
+          </div>
+          <div className="ml-0.5 shrink-0 lg:hidden">
+            <Modal.Open opens="menu" toggle>
+              <button
+                type="button"
+                aria-label="Open menu"
+                className="
+        flex
+        h-10
+        w-10
+        items-center
+        justify-center
+        rounded-full
+        text-[var(--color-text)]
+        transition-all
+        duration-200
+        hover:bg-neutral-100
+        active:scale-95
+      "
+              >
+                <Menu size={21} strokeWidth={1.8} />
+              </button>
+            </Modal.Open>
+
+            <Modal.Window
+              name="menu"
+              className="lg:w-72 p-2 w-30"
+              positionClasses="right-3"
             >
               <MenuContent isAuthenticated={isAuthenticated} />
             </Modal.Window>

@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import useLogOut from "../../features/auth/useLogout";
+import { useAuth } from "../../context/AuthContext";
 
 export default function MenuContent({ isAuthenticated }) {
   const navigate = useNavigate();
   const { logOut, isPending } = useLogOut();
+  const { isOwner } = useAuth();
   function handleLogout() {
     logOut(
       {},
@@ -24,12 +26,14 @@ export default function MenuContent({ isAuthenticated }) {
               My profile
             </button>
 
-            <button
-              type="button"
-              className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
-            >
-              My properties
-            </button>
+            {isOwner && (
+              <button
+                type="button"
+                className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
+              >
+                My properties
+              </button>
+            )}
 
             <button
               type="button"
@@ -49,12 +53,14 @@ export default function MenuContent({ isAuthenticated }) {
           <hr className="my-2 border-neutral-100" />
 
           <div className="space-y-1">
-            <button
-              type="button"
-              className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
-            >
-              List your property
-            </button>
+            {/* isOwner && (
+              <button
+                type="button"
+                className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
+              >
+                List your property
+              </button>
+            ) */}
 
             <button
               type="button"
@@ -114,12 +120,12 @@ export default function MenuContent({ isAuthenticated }) {
           <hr className="my-2 border-neutral-100" />
 
           <div className="space-y-1">
-            <button
+            {/* <button
               type="button"
               className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
             >
               List your property
-            </button>
+            </button>*/}
 
             <button
               type="button"

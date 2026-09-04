@@ -1,9 +1,5 @@
 import HomeCard from "../home/HomeCard";
 
-import property1 from "../../assets/exterior1.png";
-import property2 from "../../assets/exterior2.png";
-import property3 from "../../assets/exterior3.png";
-import property4 from "../../assets/exterior4.png";
 import { ArrowRight } from "lucide-react";
 
 export default function PropertySection({ title, description, properties }) {

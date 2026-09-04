@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import supabase from "../services/supabase";
+import useProfile from "../profiles/useProfile";
 
 const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { profile } = useProfile(user?.id);
 
   useEffect(() => {
     async function getCurrentUser() {
@@ -32,8 +34,12 @@ export default function AuthProvider({ children }) {
 
   const isAuthenticated = !!user;
 
+  const isOwner = profile?.role === "owner";
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, loading }}>
+    <AuthContext.Provider
+      value={{ user, profile, isAuthenticated, loading, isOwner }}
+    >
       {children}
     </AuthContext.Provider>
   );
