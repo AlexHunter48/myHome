@@ -10,16 +10,7 @@ import PropertyForm from "./features/properties/PropertyForm";
 import PropertyImages from "./features/properties/PropertyImages";
 import PropertyDetail from "./pages/PropertyDetail";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
-
-console.log("QUERY CLIENT:", queryClient);
-console.log("QUERY CLIENT:", queryClient);
+const queryClient = new QueryClient();
 
 export default function App() {
   return (

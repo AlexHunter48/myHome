@@ -16,7 +16,6 @@ import useProperty from "../features/properties/useProperty";
 import Loader from "../components/ui/Loader";
 
 export default function PropertyDetail() {
-  console.log("🔥 PROPERTY DETAIL RENDERING");
   const [activeImage, setActiveImage] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const { id } = useParams();

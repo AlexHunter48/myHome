@@ -1,13 +1,36 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import { ArrowLeft } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
 import useCreateProperty from "../properties/useCreateProperties";
+import { searchLocations } from "../../services/apiLocation";
 
 import toast from "react-hot-toast";
 
 export default function PropertyForm() {
+  const [locationSearch, setLocationSearch] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  useEffect(
+    function () {
+      const timer = setTimeout(async () => {
+        if (!locationSearch.trim()) {
+          setLocations([]);
+          return;
+        }
+        const results = await searchLocations(locationSearch);
+        setLocations(results);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    },
+    [locationSearch],
+  );
+
   const { user } = useAuth();
   const navigate = useNavigate();
 
