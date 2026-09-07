@@ -1,46 +1,30 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ArrowLeft } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
 import useCreateProperty from "../properties/useCreateProperties";
-import { searchLocations } from "../../services/apiLocation";
+import { geocodeAddress } from "../../services/apiLocation";
 
 import toast from "react-hot-toast";
+import useUpdatePropertyCoordinates from "./useUpdatePropertyCoordinates";
 
 export default function PropertyForm() {
-  const [locationSearch, setLocationSearch] = useState("");
-  const [locations, setLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState(null);
-
-  useEffect(
-    function () {
-      const timer = setTimeout(async () => {
-        if (!locationSearch.trim()) {
-          setLocations([]);
-          return;
-        }
-        const results = await searchLocations(locationSearch);
-        setLocations(results);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    },
-    [locationSearch],
-  );
-
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
+
     formState: { errors },
   } = useForm();
 
   const { createProperty, isPending: isCreating } = useCreateProperty();
+  const { updateCoordinates, isPending, error } =
+    useUpdatePropertyCoordinates();
 
   function onSubmit(data) {
     createProperty(
@@ -50,6 +34,19 @@ export default function PropertyForm() {
       },
       {
         onSuccess: (property) => {
+          geocodeAddress(data.location)
+            .then((coordinates) => {
+              if (!coordinates) return;
+
+              return updateCoordinates({
+                propertyId: property.id,
+                coordinates,
+              });
+            })
+            .catch((error) => {
+              console.error("Geocoding failed:", error);
+            });
+
           navigate(`/properties/${property.id}/images`);
         },
 
@@ -270,15 +267,17 @@ export default function PropertyForm() {
                 >
                   Location
                 </label>
-
                 <input
                   id="location"
                   type="text"
-                  placeholder="Lekki Phase 1, Lagos"
+                  placeholder="No 3A Ogunbela Avenue, Ikeja, Lagos"
                   {...register("location", {
                     required: "A location is required",
                   })}
-                  className="w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-neutral-400 focus:border-[#1b3b2b] focus:ring-2 focus:ring-[#1b3b2b]/10"
+                  className="w-full rounded-2xl border border-neutral-200 bg-white
+                px-4 py-3 text-sm outline-none transition
+                placeholder:text-neutral-400 focus:border-[#1b3b2b] focus:ring-2
+                focus:ring-[#1b3b2b]/10"
                 />
 
                 {errors.location && (
@@ -357,7 +356,7 @@ export default function PropertyForm() {
 
                 {errors.bathrooms && (
                   <p className="mt-1.5 text-xs text-red-600">
-                    {errors.baths.message}
+                    {errors.bathrooms.message}
                   </p>
                 )}
               </div>

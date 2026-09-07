@@ -9,6 +9,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import PropertyForm from "./features/properties/PropertyForm";
 import PropertyImages from "./features/properties/PropertyImages";
 import PropertyDetail from "./pages/PropertyDetail";
+import ProtectedOwnerRoute from "./features/properties/ProtectedOwnerRoute";
+import PageNotFound from "./pages/PageNotFound";
 
 const queryClient = new QueryClient();
 
@@ -20,10 +22,18 @@ export default function App() {
           <Routes>
             <Route index element={<AppLayout />} />
             <Route path="/properties" element={<Properties />} />
-            <Route path="/properties/new" element={<PropertyForm />} />
+            <Route
+              path="/properties/new"
+              element={
+                <ProtectedOwnerRoute>
+                  <PropertyForm />
+                </ProtectedOwnerRoute>
+              }
+            />
             <Route path="/properties/:id/images" element={<PropertyImages />} />
             <Route path="/properties/:id" element={<PropertyDetail />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

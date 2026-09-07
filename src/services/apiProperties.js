@@ -86,3 +86,19 @@ export async function getPropertyById(propertyId) {
 
   return result;
 }
+
+export async function updatePropertyCoordinates({ propertyId, coordinates }) {
+  const { data, error } = await supabase
+    .from("properties")
+    .update({
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+    })
+    .eq("id", propertyId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}

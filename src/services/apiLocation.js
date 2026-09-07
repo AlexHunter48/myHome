@@ -1,24 +1,13 @@
-const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_API_KEY;
+import supabase from "./supabase";
 
-export async function searchLocations(searchText) {
-  if (!searchText.trim()) return [];
-
-  const params = new URLSearchParams({
-    text: searchText,
-    apiKey: GEOAPIFY_API_KEY,
-    limit: "5",
-    filter: "countrycode:ng",
+export async function geocodeAddress(address) {
+  const { data, error } = await supabase.functions.invoke("geocode-address", {
+    body: {
+      address,
+    },
   });
 
-  const response = await fetch(
-    `https://api.geoapify.com/v1/geocode/autocomplete?${params}`,
-  );
+  if (error) throw new Error(error.message);
 
-  if (!response.ok) {
-    throw new Error("Failed to search locations");
-  }
-
-  const data = await response.json();
-
-  return data.features;
+  return data;
 }

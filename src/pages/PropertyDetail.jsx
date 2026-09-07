@@ -10,7 +10,7 @@ import {
   ChevronRight,
   House,
 } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import useProperty from "../features/properties/useProperty";
 import Loader from "../components/ui/Loader";
@@ -23,6 +23,12 @@ export default function PropertyDetail() {
 
   const { property, isPending, error } = useProperty(id);
 
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+  if (!uuidRegex.test(id)) {
+    return <Navigate to="/properties" replace />;
+  }
   if (isPending) {
     return <Loader />;
   }
