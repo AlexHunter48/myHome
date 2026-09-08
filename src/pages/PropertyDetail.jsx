@@ -16,6 +16,7 @@ import useProperty from "../features/properties/useProperty";
 import Loader from "../components/ui/Loader";
 import PropertyNotFound from "../features/properties/PropertyNotFound";
 import PropertyError from "../features/properties/PropertyError";
+import PropertyMap from "../features/properties/PropertyMap";
 
 export default function PropertyDetail() {
   const [activeImage, setActiveImage] = useState(0);
@@ -91,7 +92,13 @@ export default function PropertyDetail() {
         </div>
 
         <section className="relative overflow-hidden rounded-[28px] sm:rounded-[34px]">
-          <div className="grid h-[420px] grid-cols-1 gap-2 sm:h-[520px] lg:grid-cols-2">
+          <div
+            className={`grid h-[420px] grid-cols-1 gap-2 sm:h-[520px] ${
+              property.property_images.length === 2
+                ? "lg:grid-cols-[2fr_1fr]"
+                : "lg:grid-cols-2"
+            }`}
+          >
             <div className="relative h-full overflow-hidden lg:rounded-l-[34px]">
               <button
                 type="button"
@@ -138,7 +145,13 @@ export default function PropertyDetail() {
               </div>
             </div>
 
-            <div className="hidden grid-cols-2 gap-2 lg:grid ">
+            <div
+              className={`hidden gap-2 lg:grid ${
+                property.property_images.length === 2
+                  ? "lg:grid-cols-1"
+                  : "lg:grid-cols-2"
+              }`}
+            >
               {property.property_images.slice(1, 5).map((image, index) => {
                 const imageIndex = index + 1;
                 const isActive = activeImage === imageIndex;
@@ -342,21 +355,11 @@ export default function PropertyDetail() {
                 Location
               </h2>
 
-              <div className="mt-5 flex min-h-[220px] items-center justify-center rounded-3xl border border-neutral-200 bg-[#eeece6]">
-                <div className="text-center">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#1b3b2b] shadow-sm">
-                    <MapPin size={21} strokeWidth={1.7} />
-                  </div>
-
-                  <p className="mt-3 text-sm font-semibold text-neutral-800">
-                    {property.location}
-                  </p>
-
-                  <p className="mt-1 text-xs text-neutral-500">
-                    Map integration coming soon
-                  </p>
-                </div>
-              </div>
+              <PropertyMap
+                latitude={property.latitude}
+                longitude={property.longitude}
+                location={property.location}
+              />
             </section>
           </div>
 
