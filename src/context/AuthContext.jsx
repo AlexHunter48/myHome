@@ -7,7 +7,8 @@ const AuthContext = createContext();
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { profile } = useProfile(user?.id);
+
+  const { profile, isPending: isProfileLoading } = useProfile(user?.id);
 
   useEffect(() => {
     async function getCurrentUser() {
@@ -33,12 +34,19 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const isAuthenticated = !!user;
-
   const isOwner = profile?.role === "owner";
+
+  const isAuthLoading = loading || (isAuthenticated && isProfileLoading);
 
   return (
     <AuthContext.Provider
-      value={{ user, profile, isAuthenticated, loading, isOwner }}
+      value={{
+        user,
+        profile,
+        isAuthenticated,
+        loading: isAuthLoading,
+        isOwner,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -47,7 +55,9 @@ export default function AuthProvider({ children }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
+
   if (context === undefined)
     throw new Error("Context was used outside of Provider");
+
   return context;
 }

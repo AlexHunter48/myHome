@@ -1,10 +1,19 @@
-
 import "@supabase/functions-js/edge-runtime.d.ts";
 
-
-
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "http://localhost:5173",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
 
 Deno.serve(async (req) => {
+  
+  if (req.method === "OPTIONS") {
+    return new Response("ok", {
+      headers: corsHeaders,
+    });
+  }
+
   try {
     const { address } = await req.json();
 
@@ -13,7 +22,10 @@ Deno.serve(async (req) => {
         JSON.stringify({ error: "Address is required" }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
         },
       );
     }
@@ -48,7 +60,10 @@ Deno.serve(async (req) => {
         }),
         {
           status: 404,
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
         },
       );
     }
@@ -62,7 +77,10 @@ Deno.serve(async (req) => {
       }),
       {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
       },
     );
   } catch (error) {
@@ -72,7 +90,10 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+        },
       },
     );
   }

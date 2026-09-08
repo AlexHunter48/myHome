@@ -14,6 +14,8 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import useProperty from "../features/properties/useProperty";
 import Loader from "../components/ui/Loader";
+import PropertyNotFound from "../features/properties/PropertyNotFound";
+import PropertyError from "../features/properties/PropertyError";
 
 export default function PropertyDetail() {
   const [activeImage, setActiveImage] = useState(0);
@@ -21,24 +23,24 @@ export default function PropertyDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { property, isPending, error } = useProperty(id);
-
   const uuidRegex =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-  if (!uuidRegex.test(id)) {
+  const isValidId = uuidRegex.test(id);
+
+  const { property, isPending, error, refetch } = useProperty(id, isValidId);
+
+  if (!isValidId) {
     return <Navigate to="/properties" replace />;
   }
   if (isPending) {
     return <Loader />;
   }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
   if (!property) {
-    return <div>Property not found.</div>;
+    return <PropertyNotFound onBack={() => navigate("/properties")} />;
+  }
+  if (error) {
+    return <PropertyError onRetry={refetch} />;
   }
 
   function nextImage() {
@@ -136,7 +138,7 @@ export default function PropertyDetail() {
               </div>
             </div>
 
-            <div className="hidden grid-cols-2 gap-2 lg:grid">
+            <div className="hidden grid-cols-2 gap-2 lg:grid ">
               {property.property_images.slice(1, 5).map((image, index) => {
                 const imageIndex = index + 1;
                 const isActive = activeImage === imageIndex;

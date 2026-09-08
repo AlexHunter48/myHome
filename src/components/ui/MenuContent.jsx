@@ -158,6 +158,7 @@ export default function MenuContent({ isAuthenticated }) {
           <button
             type="button"
             className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-semibold text-[#1b3b2b] transition hover:bg-[#eaf0ec]"
+            onClick={() => navigate("/auth")}
           >
             Sign in
           </button>
