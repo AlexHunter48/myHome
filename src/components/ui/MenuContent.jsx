@@ -38,6 +38,7 @@ export default function MenuContent({ isAuthenticated }) {
             <button
               type="button"
               className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
+              onClick={() => navigate("/properties/favourites")}
             >
               Saved homes
             </button>
@@ -111,6 +112,7 @@ export default function MenuContent({ isAuthenticated }) {
 
             <button
               type="button"
+              onClick={() => navigate("/properties/favourites")}
               className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
             >
               Saved homes

@@ -1,8 +1,11 @@
 import HomeCard from "../home/HomeCard";
-
 import { ArrowRight } from "lucide-react";
 
-export default function PropertySection({ title, description, properties }) {
+export default function PropertySection({
+  title,
+  description,
+  properties = [],
+}) {
   return (
     <section className="mt-16">
       <div className="mb-7 flex items-end justify-between gap-6">
@@ -25,26 +28,30 @@ export default function PropertySection({ title, description, properties }) {
         </button>
       </div>
 
+      {/* Desktop */}
       <div className="hidden gap-5 xl:grid xl:grid-cols-4">
-        {properties.map((property, index) => (
-          <HomeCard key={index} {...property} />
+        {properties.map((property) => (
+          <HomeCard key={property.id} {...property} />
         ))}
       </div>
 
+      {/* Tablet */}
       <div className="hidden gap-5 md:grid md:grid-cols-3 xl:hidden">
-        {properties.slice(0, 6).map((property, index) => (
-          <HomeCard key={index} {...property} />
+        {properties.slice(0, 6).map((property) => (
+          <HomeCard key={property.id} {...property} />
         ))}
       </div>
 
+      {/* Mobile */}
       <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-6 scrollbar-hide md:hidden">
-        {properties.map((property, index) => (
-          <div key={index} className="w-[76vw] shrink-0 snap-start">
+        {properties.map((property) => (
+          <div key={property.id} className="w-[76vw] shrink-0 snap-start">
             <HomeCard {...property} />
           </div>
         ))}
       </div>
 
+      {/* Mobile See All */}
       <button
         type="button"
         className="mt-1 flex items-center gap-2 text-sm font-semibold text-[#1b3b2b] sm:hidden"

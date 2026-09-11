@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CheckCircle2,
   ChevronLeft,
@@ -8,8 +8,13 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import useSaveProperty from "../properties/useSaveProperty";
+import useCheckSavedProperty from "../properties/useCheckedSavedProperty";
+import { formatCurrency } from "../../utils/formatCurrency";
+import useRemoveSavedProperty from "../properties/useRemoveSavedProperty";
 
 export default function HomeCard({
+  id,
   image = "",
   images = [],
   price,
@@ -24,7 +29,20 @@ export default function HomeCard({
 
   const [currentImage, setCurrentImage] = useState(0);
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const { saveProperty, isPending } = useSaveProperty();
+
+  const propertyId = id;
+
+  const userId = user?.id;
+  console.log(isAuthenticated);
+
+  const { isSaved, isPending: isCheckingSaved } = useCheckSavedProperty({
+    userId,
+    propertyId,
+  });
+
+  const { removeProperty } = useRemoveSavedProperty();
 
   const nextImage = (e) => {
     e.stopPropagation();
@@ -49,7 +67,11 @@ export default function HomeCard({
 
   return (
     <article className="group w-full overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)]">
-      <div className="relative aspect-[1.35/1] overflow-hidden bg-neutral-100">
+      <div
+        className="relative aspect-[1.35/1] overflow-hidden bg-neutral-100 cursor-pointer
+    "
+        onClick={() => navigate(`/properties/${propertyId}`)}
+      >
         {propertyImages.length > 0 ? (
           <img
             src={propertyImages[currentImage]}
@@ -75,13 +97,28 @@ export default function HomeCard({
         <button
           type="button"
           aria-label="Save property"
+          disabled={isPending || (isAuthenticated && isCheckingSaved)}
           onClick={(e) => {
             e.stopPropagation();
-            if (!isAuthenticated) navigate("/auth");
+
+            if (!isAuthenticated) {
+              console.log("navigating");
+              navigate("/auth");
+              return;
+            }
+
+            if (isSaved) {
+              removeProperty({ userId, propertyId });
+            } else {
+              saveProperty({ userId, propertyId });
+            }
           }}
           className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-white"
         >
-          <Heart className="h-[18px] w-[18px]" strokeWidth={1.8} />
+          <Heart
+            className={`h-[18px] w-[18px] ${isSaved ? "text-pink-500" : ""}`}
+            strokeWidth={1.8}
+          />
         </button>
 
         {propertyImages.length > 1 && (
@@ -135,7 +172,7 @@ export default function HomeCard({
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-[19px] font-semibold tracking-[-0.02em] text-neutral-950">
-              {price}
+              {formatCurrency(price)}
 
               {period && (
                 <span className="ml-1 text-sm font-normal text-neutral-500">

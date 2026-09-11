@@ -34,12 +34,15 @@ export default function PropertyDetail() {
   if (!isValidId) {
     return <Navigate to="/properties" replace />;
   }
+
   if (isPending) {
     return <Loader />;
   }
+
   if (!property) {
     return <PropertyNotFound onBack={() => navigate("/properties")} />;
   }
+
   if (error) {
     return <PropertyError onRetry={refetch} />;
   }
@@ -59,18 +62,37 @@ export default function PropertyDetail() {
   return (
     <main className="min-h-screen bg-[var(--color-background)] pb-20 pt-10 sm:pt-15">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-10">
+        {/* Navigation */}
         <div className="mb-6 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => navigate("/properties")}
-            className="group flex items-center gap-2 text-sm font-medium text-neutral-600 transition hover:text-[#1b3b2b]"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white transition group-hover:border-[#1b3b2b]/20 group-hover:bg-[#EAF0EC]">
-              <House size={17} strokeWidth={1.8} />
-            </span>
+          <div className="flex items-center gap-2">
+            {/* Back */}
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              aria-label="Go back"
+              className="group flex items-center gap-2 text-sm font-medium text-neutral-600 transition hover:text-[#1b3b2b]"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition group-hover:border-[#1b3b2b]/20 group-hover:bg-[#EAF0EC]">
+                <ChevronLeft size={17} strokeWidth={1.8} />
+              </span>
 
-            <span className="hidden sm:block">Home</span>
-          </button>
+              <span className="hidden sm:block">Back</span>
+            </button>
+
+            {/* Home */}
+            <button
+              type="button"
+              onClick={() => navigate("/properties")}
+              aria-label="Go to home"
+              className="group flex items-center gap-2 text-sm font-medium text-neutral-600 transition hover:text-[#1b3b2b]"
+            >
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition group-hover:border-[#1b3b2b]/20 group-hover:bg-[#EAF0EC]">
+                <House size={17} strokeWidth={1.8} />
+              </span>
+
+              <span className="hidden sm:block">Home</span>
+            </button>
+          </div>
 
           <div className="flex items-center gap-2">
             <button
@@ -91,12 +113,15 @@ export default function PropertyDetail() {
           </div>
         </div>
 
+        {/* Gallery */}
         <section className="relative overflow-hidden rounded-[28px] sm:rounded-[34px]">
           <div
-            className={`grid h-[420px] grid-cols-1 gap-2 sm:h-[520px] ${
-              property.property_images.length === 2
-                ? "lg:grid-cols-[2fr_1fr]"
-                : "lg:grid-cols-2"
+            className={`grid h-[420px] gap-2 sm:h-[520px] ${
+              property.property_images.length === 1
+                ? "lg:grid-cols-1"
+                : property.property_images.length === 2
+                  ? "lg:grid-cols-[2fr_1fr]"
+                  : "lg:grid-cols-2"
             }`}
           >
             <div className="relative h-full overflow-hidden lg:rounded-l-[34px]">
@@ -106,8 +131,8 @@ export default function PropertyDetail() {
                 className="group relative h-full w-full cursor-pointer"
               >
                 <img
-                  src={property.property_images[activeImage].url}
-                  alt={property.title}
+                  src={property.property_images[activeImage]?.url}
+                  alt={property?.title}
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.01]"
                 />
 
@@ -124,25 +149,27 @@ export default function PropertyDetail() {
                 {activeImage + 1} / {property.property_images.length}
               </div>
 
-              <div className="absolute bottom-5 right-5 flex gap-2">
-                <button
-                  type="button"
-                  onClick={previousImage}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-800 shadow-sm backdrop-blur transition hover:bg-white"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft size={19} strokeWidth={1.8} />
-                </button>
+              {property.property_images.length > 1 && (
+                <div className="absolute bottom-5 right-5 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={previousImage}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-800 shadow-sm backdrop-blur transition hover:bg-white"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={19} strokeWidth={1.8} />
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={nextImage}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-800 shadow-sm backdrop-blur transition hover:bg-white"
-                  aria-label="Next image"
-                >
-                  <ChevronRight size={19} strokeWidth={1.8} />
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={nextImage}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-neutral-800 shadow-sm backdrop-blur transition hover:bg-white"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={19} strokeWidth={1.8} />
+                  </button>
+                </div>
+              )}
             </div>
 
             <div
@@ -188,6 +215,7 @@ export default function PropertyDetail() {
           </div>
         </section>
 
+        {/* Fullscreen Gallery */}
         {isGalleryOpen && (
           <div className="fixed inset-0 z-[100] bg-black/95 text-white">
             <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-5 py-5 sm:px-8">
@@ -217,23 +245,27 @@ export default function PropertyDetail() {
               />
             </div>
 
-            <button
-              type="button"
-              onClick={previousImage}
-              className="absolute left-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-white/10 sm:left-8"
-              aria-label="Previous image"
-            >
-              <ChevronLeft size={24} strokeWidth={1.6} />
-            </button>
+            {property.property_images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={previousImage}
+                  className="absolute left-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-white/10 sm:left-8"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft size={24} strokeWidth={1.6} />
+                </button>
 
-            <button
-              type="button"
-              onClick={nextImage}
-              className="absolute right-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-white/10 sm:right-8"
-              aria-label="Next image"
-            >
-              <ChevronRight size={24} strokeWidth={1.6} />
-            </button>
+                <button
+                  type="button"
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition hover:bg-white/10 sm:right-8"
+                  aria-label="Next image"
+                >
+                  <ChevronRight size={24} strokeWidth={1.6} />
+                </button>
+              </>
+            )}
 
             <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/50 px-4 py-4 backdrop-blur-xl">
               <div className="mx-auto flex max-w-[1400px] gap-2 overflow-x-auto pb-1">
@@ -264,6 +296,7 @@ export default function PropertyDetail() {
           </div>
         )}
 
+        {/* Property Details */}
         <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_390px] lg:gap-16">
           <div>
             <div className="border-b border-neutral-200 pb-8">
@@ -309,6 +342,7 @@ export default function PropertyDetail() {
                   <p className="text-sm font-semibold text-neutral-900">
                     {property.beds}
                   </p>
+
                   <p className="text-xs text-neutral-500">Bedrooms</p>
                 </div>
               </div>
@@ -322,6 +356,7 @@ export default function PropertyDetail() {
                   <p className="text-sm font-semibold text-neutral-900">
                     {property.bathrooms}
                   </p>
+
                   <p className="text-xs text-neutral-500">Bathrooms</p>
                 </div>
               </div>
@@ -335,6 +370,7 @@ export default function PropertyDetail() {
                   <p className="text-sm font-semibold text-neutral-900">
                     {property.area.toLocaleString()}
                   </p>
+
                   <p className="text-xs text-neutral-500">sq ft</p>
                 </div>
               </div>
@@ -363,6 +399,7 @@ export default function PropertyDetail() {
             </section>
           </div>
 
+          {/* Contact Card */}
           <aside className="lg:sticky lg:top-28 lg:self-start">
             <div className="rounded-[28px] border border-neutral-200 bg-white p-6 shadow-[0_12px_40px_rgba(0,0,0,0.06)] sm:p-7">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">

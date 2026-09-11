@@ -8,7 +8,7 @@ import {
   Heart,
   Navigation,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import myhome from "../../assets/myhome-logo-exact.svg";
 import Modal from "../../components/ui/Modal";
 import { useState } from "react";
@@ -20,6 +20,7 @@ export default function StickySearch({ location, setLocation }) {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <Modal>
@@ -313,7 +314,7 @@ export default function StickySearch({ location, setLocation }) {
               List your property
             </Link>
             <Link
-              to="#"
+              to="/properties/favourites"
               aria-label="Saved properties"
               className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-neutral-100 hover:text-[var(--color-primary)]"
             >

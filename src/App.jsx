@@ -11,6 +11,7 @@ import PropertyImages from "./features/properties/PropertyImages";
 import PropertyDetail from "./pages/PropertyDetail";
 import ProtectedOwnerRoute from "./features/properties/ProtectedOwnerRoute";
 import PageNotFound from "./pages/PageNotFound";
+import Favorites from "./pages/Favourites";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ export default function App() {
                 </ProtectedOwnerRoute>
               }
             />
+            <Route path="/properties/favourites" element={<Favorites />} />
             <Route path="/properties/:id/images" element={<PropertyImages />} />
             <Route path="/properties/:id" element={<PropertyDetail />} />
             <Route path="/auth" element={<Auth />} />
