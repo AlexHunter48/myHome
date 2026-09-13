@@ -5,19 +5,15 @@ import { useState } from "react";
 import useProperties from "./useProperties";
 import FilterModal, { useFilter } from "../../components/ui/FilterModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import PropertyEmptyState from "./PropertyEmptyState";
+import formatPriceInput from "../../utils/formatInputCurrency";
 
-const filters = ["For Sale", "For Rent", "Apartments", "Houses", "Land"];
+const filters = ["All", "For Sale", "For Rent", "Apartment", "House", "Land"];
 
 function FilterContent({ filters, setFilters }) {
   const { close } = useFilter();
   const navigate = useNavigate();
-  function formatPriceInput(value) {
-    if (!value) return "";
 
-    const number = value.replace(/\D/g, "");
-
-    return new Intl.NumberFormat("en-NG").format(number);
-  }
   function showHomes() {
     const params = new URLSearchParams();
 
@@ -256,11 +252,12 @@ function FilterContent({ filters, setFilters }) {
                     e.stopPropagation();
                     setFilters((current) => ({
                       ...current,
-                      listingStatus: option === "Buy" ? "Sale" : "Rent",
+                      listingStatus: option === "Buy" ? "For Sale" : "For Rent",
                     }));
                   }}
                   className={` ${
-                    filters.listingStatus === option
+                    filters.listingStatus ===
+                    (option === "Buy" ? "For Sale" : "For Rent")
                       ? "border-[#1b3b2b] bg-[#EAF0EC] text-[#1b3b2b]"
                       : "border-neutral-200 text-neutral-700 hover:border-[#1b3b2b]/40 hover:bg-[#EAF0EC] hover:text-[#1b3b2b]"
                   }flex-1 rounded-full border border-neutral-200 px-5 py-3 text-sm font-medium  transition hover:border-[#1b3b2b]/40 hover:bg-[#EAF0EC] hover:text-[#1b3b2b]`}
@@ -278,12 +275,15 @@ function FilterContent({ filters, setFilters }) {
           type="button"
           className="text-sm font-medium text-neutral-500 underline-offset-4 transition hover:text-neutral-900 hover:underline"
           onClick={() => {
-            setBathrooms(null);
-            setBedrooms(null);
-            setListingStatus(null);
-            setPropertyType(null);
-            setMaximumPrice("");
-            setMinimumPrice("");
+            setFilters((current) => ({
+              ...current,
+              bedrooms: null,
+              bathrooms: null,
+              listingStatus: null,
+              propertyType: null,
+              maximumPrice: "",
+              minimumPrice: "",
+            }));
           }}
         >
           Clear all
@@ -311,12 +311,16 @@ export default function Properties() {
     listingStatus: null,
   });
 
+  const navigate = useNavigate();
   const [location, setLocation] = useState({
     city: "Lagos",
     state: "Lagos",
     country: "Nigeria",
   });
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const activeType = searchParams.get("type");
+  const activeStatus = searchParams.get("status");
 
   const newFilters = {
     minimumPrice: searchParams.get("minPrice") || "",
@@ -325,27 +329,35 @@ export default function Properties() {
     bathrooms: searchParams.get("baths") || "",
     propertyType: searchParams.get("type") || "",
     listingStatus: searchParams.get("status") || "",
+    location: searchParams.get("location") || "",
   };
 
   const { properties, isPending, error } = useProperties(newFilters);
 
   const featuredHomes = properties?.slice(0, 7) || [];
 
-  const lekkiHomes =
-    properties?.filter((property) =>
-      property.location.toLowerCase().includes("lekki"),
-    ) || [];
+  const locationGroups = {};
 
-  const ikoyiHomes =
-    properties?.filter((property) =>
-      property.location.toLowerCase().includes("ikoyi"),
-    ) || [];
+  properties?.forEach((property) => {
+    const location = property.neighbourhood?.trim();
 
-  const victoriaIslandHomes =
-    properties?.filter((property) =>
-      property.location.toLowerCase().includes("victoria island"),
-    ) || [];
+    if (!location) return;
 
+    if (!locationGroups[location]) {
+      locationGroups[location] = [];
+    }
+
+    locationGroups[location].push(property);
+  });
+
+  function handleClearFilters() {
+    setSearchParams({});
+  }
+
+  const isActive = (filter) =>
+    filter === "All"
+      ? !activeStatus && !activeType
+      : filter === activeStatus || filter === activeType;
   return (
     <FilterModal>
       <main className="min-h-screen bg-[var(--color-background)] lg:py-8">
@@ -359,8 +371,22 @@ export default function Properties() {
               <button
                 key={filter}
                 type="button"
+                onClick={() => {
+                  const params = new URLSearchParams();
+                  if (filter === "All") {
+                    setSearchParams({});
+                    return;
+                  }
+                  if (filter === "For Sale" || filter === "For Rent") {
+                    params.set("status", filter);
+                  } else {
+                    params.set("type", filter);
+                  }
+
+                  navigate(`/properties?${params.toString()}`);
+                }}
                 className={`flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium transition ${
-                  index === 0
+                  isActive(filter)
                     ? "border-[#1b3b2b] bg-[#1b3b2b] text-white"
                     : "border-neutral-200 bg-white text-neutral-700 hover:border-[#1b3b2b]/40 hover:bg-neutral-50"
                 }`}
@@ -414,34 +440,30 @@ export default function Properties() {
               Something went wrong while loading properties.
             </p>
           )}
+          {!isPending &&
+            !error &&
+            (properties?.length === 0 ? (
+              <PropertyEmptyState onClear={handleClearFilters} />
+            ) : (
+              <>
+                <PropertySection
+                  title="Featured homes"
+                  description="Handpicked properties worth taking a closer look at."
+                  properties={featuredHomes}
+                />
 
-          {!isPending && !error && (
-            <>
-              <PropertySection
-                title="Featured homes"
-                description="Handpicked properties worth taking a closer look at."
-                properties={featuredHomes}
-              />
-
-              <PropertySection
-                title="Popular in Lekki"
-                description="Explore homes in one of Lagos' most sought-after areas."
-                properties={lekkiHomes}
-              />
-
-              <PropertySection
-                title="Homes in Ikoyi"
-                description="Discover refined homes in one of Lagos' most prestigious neighbourhoods."
-                properties={ikoyiHomes}
-              />
-
-              <PropertySection
-                title="Victoria Island"
-                description="Modern residences close to business, lifestyle and the waterfront."
-                properties={victoriaIslandHomes}
-              />
-            </>
-          )}
+                {Object.entries(locationGroups).map(
+                  ([location, properties]) => (
+                    <PropertySection
+                      key={location}
+                      title={`Homes in ${location}`}
+                      description={`Discover properties available in ${location}.`}
+                      properties={properties}
+                    />
+                  ),
+                )}
+              </>
+            ))}
         </div>
       </main>
     </FilterModal>

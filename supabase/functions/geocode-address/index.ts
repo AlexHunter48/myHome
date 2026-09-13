@@ -57,6 +57,7 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({
           error: "Could not find coordinates for this address",
+          address,
         }),
         {
           status: 404,
@@ -69,11 +70,14 @@ Deno.serve(async (req) => {
     }
 
     const properties = data.features[0].properties;
+    console.log(properties);
 
     return new Response(
       JSON.stringify({
         latitude: properties.lat,
         longitude: properties.lon,
+         neighbourhood: properties.suburb || null,
+          city: properties.city || null,
       }),
       {
         status: 200,

@@ -15,6 +15,8 @@ export async function getProperties(filters = {}) {
     )
     .eq("status", "published");
 
+  console.log(filters?.listingStatus);
+
   if (filters.minimumPrice) {
     query = query.gte("price", Number(filters.minimumPrice));
   }
@@ -28,7 +30,7 @@ export async function getProperties(filters = {}) {
   }
 
   if (filters.bathrooms && filters.bathrooms !== "Any") {
-    query = query.gte("bathroom", Number(filters.bathrooms.replace("+", "")));
+    query = query.gte("bathrooms", Number(filters.bathrooms.replace("+", "")));
   }
 
   if (filters.propertyType) {
@@ -36,10 +38,17 @@ export async function getProperties(filters = {}) {
   }
 
   if (filters.listingStatus) {
-    query = query.eq("listing_type", filters.listingStatus);
+    query = query.eq("listing_status", filters.listingStatus);
+  }
+
+  if (filters.location) {
+    query = query.ilike("neighbourhood", `%${filters.location}%`);
   }
 
   const { data: properties, error } = await query;
+  console.log("FILTER:", filters.listingStatus);
+  console.log("RESULT:", properties);
+  console.log("ERROR:", error);
 
   if (error) throw new Error(error.message);
 
@@ -60,7 +69,7 @@ export async function getProperties(filters = {}) {
       image: images[0] || "",
     };
   });
-
+  console.log(formattedProperties);
   return formattedProperties;
 }
 
@@ -146,6 +155,8 @@ export async function updatePropertyCoordinates({ propertyId, coordinates }) {
     .update({
       latitude: coordinates.latitude,
       longitude: coordinates.longitude,
+      neighbourhood: coordinates.neighbourhood,
+      city: coordinates.city,
     })
     .eq("id", propertyId)
     .select()

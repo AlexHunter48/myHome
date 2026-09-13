@@ -14,13 +14,32 @@ import Modal from "../../components/ui/Modal";
 import { useState } from "react";
 import MenuContent from "../../components/ui/MenuContent";
 import { useAuth } from "../../context/AuthContext";
+import formatPriceInput from "../../utils/formatInputCurrency";
 
 export default function StickySearch({ location, setLocation }) {
   const [whereQuery, setWhereQuery] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [type, setType] = useState("");
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  function showHomes() {
+    const params = new URLSearchParams();
+    if (whereQuery) {
+      params.set("location", whereQuery);
+    }
+    if (minPrice) {
+      params.set("minPrice", minPrice);
+    }
+    if (maxPrice) {
+      params.set("maxPrice", maxPrice);
+    }
+    if (type) {
+      params.set("type", type);
+    }
+    navigate(`/properties?${params.toString()}`);
+  }
 
   return (
     <Modal>
@@ -157,10 +176,7 @@ export default function StickySearch({ location, setLocation }) {
 
               <div className="hidden h-8 w-px bg-neutral-200 sm:block" />
               <Modal.Open opens="PropertyType">
-                <button
-                  type="button"
-                  className="hidden min-w-0 flex-1 items-center gap-2 rounded-full px-4 py-2.5 text-left transition hover:bg-neutral-50 sm:flex"
-                >
+                <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full px-4 py-2.5 text-left transition hover:bg-neutral-50 sm:flex">
                   <Home
                     className="h-4 w-4 shrink-0 text-[#1b3b2b]"
                     strokeWidth={1.8}
@@ -172,23 +188,33 @@ export default function StickySearch({ location, setLocation }) {
                     </p>
 
                     <p className="truncate text-sm font-medium text-neutral-800">
-                      Any property
+                      {type || "Any property"}
                     </p>
                   </div>
-                </button>
+                </div>
               </Modal.Open>
 
               <Modal.Window
                 name="PropertyType"
-                positionClasses=" lg:left-1/3  translate-x-1/4 "
+                positionClasses=" lg:left-1/3  lg:translate-x-1/4 -translate-x-8"
               >
-                <div className="grid grid-cols-2 gap-2 p-1">
-                  {["Apartment", "Duplex", "Terrace", "Penthouse"].map(
-                    (type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        className="
+                <div className="grid grid-cols-3 gap-2 p-1">
+                  {[
+                    "Apartment",
+                    "Duplex",
+                    "Terrace",
+                    "Penthouse",
+                    "House",
+                    "Bungalow",
+                    "Office",
+                    "Shop",
+                    "Warehouse ",
+                  ].map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => setType(type)}
+                      className="
                                         p-3
                                         border
                                         border-neutral-200
@@ -201,20 +227,16 @@ export default function StickySearch({ location, setLocation }) {
                                         text-neutral-700
                                         transition
                                       "
-                      >
-                        {type}
-                      </button>
-                    ),
-                  )}
+                    >
+                      {type}
+                    </button>
+                  ))}
                 </div>
               </Modal.Window>
 
               <div className="hidden h-8 w-px bg-neutral-200 md:block" />
               <Modal.Open opens="budget">
-                <button
-                  type="button"
-                  className="hidden min-w-0 flex-1 items-center gap-2 rounded-full px-4 py-2.5 text-left transition hover:bg-neutral-50 md:flex"
-                >
+                <div className="hidden min-w-0 flex-1 items-center gap-2 rounded-full px-4 py-2.5 text-left transition hover:bg-neutral-50 md:flex">
                   <Banknote
                     className="h-4 w-4 shrink-0 text-[#1b3b2b]"
                     strokeWidth={1.8}
@@ -226,10 +248,14 @@ export default function StickySearch({ location, setLocation }) {
                     </p>
 
                     <p className="truncate text-sm font-medium text-neutral-800">
-                      Any budget
+                      {minPrice || maxPrice
+                        ? `₦${formatPriceInput(minPrice) || "Any"} - ₦${
+                            formatPriceInput(maxPrice) || "Any"
+                          }`
+                        : "Any budget"}
                     </p>
                   </div>
-                </button>
+                </div>
               </Modal.Open>
 
               <Modal.Window
@@ -243,9 +269,13 @@ export default function StickySearch({ location, setLocation }) {
 
                   <div className="grid grid-cols-2 gap-2">
                     <input
-                      type="number"
-                      value={minPrice}
-                      onChange={(e) => setMinPrice(e.target.value)}
+                      type="text"
+                      inputMode="numeric"
+                      value={formatPriceInput(minPrice)}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        setMinPrice(value);
+                      }}
                       onClick={(e) => e.stopPropagation()}
                       placeholder="Min ₦"
                       className="
@@ -263,9 +293,13 @@ export default function StickySearch({ location, setLocation }) {
                     />
 
                     <input
-                      type="number"
-                      value={maxPrice}
-                      onChange={(e) => setMaxPrice(e.target.value)}
+                      type="text"
+                      inputMode="numeric"
+                      value={formatPriceInput(maxPrice)}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, "");
+                        setMaxPrice(value);
+                      }}
                       onClick={(e) => e.stopPropagation()}
                       placeholder="Max ₦"
                       className="
@@ -287,6 +321,7 @@ export default function StickySearch({ location, setLocation }) {
 
               <button
                 type="button"
+                onClick={showHomes}
                 aria-label="Search"
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1b3b2b] text-white shadow-sm transition hover:bg-[#142e21] sm:h-11 sm:w-11"
               >

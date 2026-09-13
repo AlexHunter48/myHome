@@ -90,7 +90,7 @@ export default function HomeCard({
           <div className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-[#1b3b2b] shadow-sm backdrop-blur-md">
             <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2} />
 
-            <span>Verified owner</span>
+            <span> Verified owner </span>
           </div>
         )}
 
