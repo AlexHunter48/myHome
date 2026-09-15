@@ -7,7 +7,7 @@ export default function PropertySection({
   properties = [],
 }) {
   return (
-    <section className="mt-16">
+    <section className="mt-4">
       <div className="mb-7 flex items-end justify-between gap-6">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-3xl">
@@ -18,14 +18,6 @@ export default function PropertySection({
             {description}
           </p>
         </div>
-
-        <button
-          type="button"
-          className="hidden shrink-0 items-center gap-2 text-sm font-semibold text-[#1b3b2b] transition hover:gap-3 sm:flex"
-        >
-          See all
-          <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
-        </button>
       </div>
 
       {/* Desktop */}

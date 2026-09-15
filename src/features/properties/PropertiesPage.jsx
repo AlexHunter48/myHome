@@ -1,4 +1,4 @@
-import { SlidersHorizontal, MapPin, X } from "lucide-react";
+import { SlidersHorizontal, MapPin, X, House, ArrowRight } from "lucide-react";
 import StickySearch from "../home/StickySearch";
 import PropertySection from "./PropertySection";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import PropertyEmptyState from "./PropertyEmptyState";
 import formatPriceInput from "../../utils/formatInputCurrency";
 
-const filters = ["All", "For Sale", "For Rent", "Apartment", "House", "Land"];
+const filters = ["All", "For Sale", "For Rent"];
 
 function FilterContent({ filters, setFilters }) {
   const { close } = useFilter();
@@ -312,11 +312,13 @@ export default function Properties() {
   });
 
   const navigate = useNavigate();
+
   const [location, setLocation] = useState({
     city: "Lagos",
     state: "Lagos",
     country: "Nigeria",
   });
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const activeType = searchParams.get("type");
@@ -354,6 +356,8 @@ export default function Properties() {
     setSearchParams({});
   }
 
+  const hasFilters = searchParams.toString().length > 0;
+
   const isActive = (filter) =>
     filter === "All"
       ? !activeStatus && !activeType
@@ -365,18 +369,21 @@ export default function Properties() {
 
         <div className="h-[86px] lg:h-[98px]" />
 
-        <section className="border-b border-neutral-200/70 bg-[var(--color-background)]">
-          <div className="mx-auto flex max-w-[1600px] items-center gap-2 overflow-x-auto px-6 py-3 lg:px-10 scrollbar-hide">
-            {filters.map((filter, index) => (
+        {/* Quick Filters */}
+        <section className="border-b border-neutral-200/70 sm:border-b-0">
+          <div className="mx-auto flex max-w-[1600px] items-center gap-2 overflow-x-auto px-6 py-3 scrollbar-hide lg:px-10">
+            {filters.map((filter) => (
               <button
                 key={filter}
                 type="button"
                 onClick={() => {
                   const params = new URLSearchParams();
+
                   if (filter === "All") {
                     setSearchParams({});
                     return;
                   }
+
                   if (filter === "For Sale" || filter === "For Rent") {
                     params.set("status", filter);
                   } else {
@@ -387,15 +394,13 @@ export default function Properties() {
                 }}
                 className={`flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-medium transition ${
                   isActive(filter)
-                    ? "border-[#1b3b2b] bg-[#1b3b2b] text-white"
+                    ? "border-[#1b3b2b] bg-[#1b3b2b] text-white shadow-sm"
                     : "border-neutral-200 bg-white text-neutral-700 hover:border-[#1b3b2b]/40 hover:bg-neutral-50"
                 }`}
               >
                 {filter}
               </button>
             ))}
-
-            <div className="mx-1 h-6 w-px shrink-0 bg-neutral-200" />
 
             <FilterModal.Open opens="filter">
               <button
@@ -417,52 +422,157 @@ export default function Properties() {
         </section>
 
         <div className="mx-auto max-w-[1600px] px-6 pb-24 lg:px-10">
-          <section className="pt-12 lg:pt-16">
-            <div className="flex items-center gap-2 text-sm font-medium text-[var(--color-text-secondary)]">
-              <MapPin className="h-4 w-4" strokeWidth={1.8} />
-              {`${location.city}, ${location.country}`}
+          {/* Page Intro */}
+          <section className="pb-7 pt-9 sm:pb-8 sm:pt-12 lg:pb-9 lg:pt-14">
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
+              <MapPin className="h-3.5 w-3.5" strokeWidth={1.8} />
+
+              <span>
+                {location.city}, {location.country}
+              </span>
             </div>
 
-            <h1 className="mt-3 max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-[var(--color-text-primary)] sm:text-4xl lg:text-5xl">
-              Find a home you'll love
+            <h1 className="mt-3 max-w-4xl text-4xl font-semibold leading-[0.98] tracking-[-0.045em] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
+              Find somewhere
+              <span className="block text-[#1b3b2b]">
+                you'll love to call home.
+              </span>
             </h1>
 
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
               Explore verified properties from trusted owners across Lagos and
-              beyond.
+              beyond, curated for the way you want to live.
             </p>
           </section>
 
-          {isPending && <p className="py-12">Loading properties...</p>}
+          {/* Loading */}
+          {isPending && (
+            <section className="pt-2">
+              <div className="mb-4">
+                <div className="h-7 w-48 animate-pulse rounded-lg bg-neutral-200" />
+                <div className="mt-2 h-4 w-64 animate-pulse rounded-lg bg-neutral-200" />
+              </div>
 
-          {error && (
-            <p className="py-12">
-              Something went wrong while loading properties.
-            </p>
+              <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <div key={index}>
+                    <div className="aspect-[4/3] animate-pulse rounded-[24px] bg-neutral-200" />
+
+                    <div className="space-y-2 px-1 pt-3">
+                      <div className="h-5 w-3/4 animate-pulse rounded-lg bg-neutral-200" />
+                      <div className="h-4 w-1/2 animate-pulse rounded-lg bg-neutral-200" />
+                      <div className="h-4 w-2/3 animate-pulse rounded-lg bg-neutral-200" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
           )}
+
+          {/* Error */}
+          {!isPending && error && (
+            <div className="flex min-h-[300px] items-center justify-center">
+              <div className="max-w-md text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100">
+                  <House
+                    className="h-5 w-5 text-neutral-500"
+                    strokeWidth={1.7}
+                  />
+                </div>
+
+                <h2 className="mt-4 text-xl font-semibold tracking-tight text-[var(--color-text-primary)]">
+                  Something went wrong
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+                  We couldn't load the properties right now. Please try again.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Results */}
           {!isPending &&
             !error &&
-            (properties?.length === 0 ? (
+            (hasFilters && Object.entries(locationGroups).length === 0 ? (
               <PropertyEmptyState onClear={handleClearFilters} />
             ) : (
-              <>
-                <PropertySection
-                  title="Featured homes"
-                  description="Handpicked properties worth taking a closer look at."
-                  properties={featuredHomes}
-                />
+              <div className="space-y-14 lg:space-y-16">
+                {/* Featured Homes */}
+                {!hasFilters && (
+                  <section>
+                    <div className="mb-3 flex items-end justify-between gap-4">
+                      <div>
+                        <div className="flex items-center gap-3">
+                          <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text-primary)] sm:text-3xl">
+                            Featured homes
+                          </h2>
+
+                          <span className="rounded-full bg-[#e8eee9] px-2.5 py-1 text-[11px] font-semibold text-[#1b3b2b]">
+                            {featuredHomes.length}
+                          </span>
+                        </div>
+
+                        <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                          Handpicked properties worth a closer look.
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="hidden shrink-0 items-center gap-2 text-sm font-medium text-[#1b3b2b] transition hover:gap-3 sm:flex"
+                      >
+                        See all
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <PropertySection
+                      title=""
+                      description=""
+                      properties={featuredHomes}
+                    />
+                  </section>
+                )}
 
                 {Object.entries(locationGroups).map(
-                  ([location, properties]) => (
-                    <PropertySection
-                      key={location}
-                      title={`Homes in ${location}`}
-                      description={`Discover properties available in ${location}.`}
-                      properties={properties}
-                    />
+                  ([location, locationProperties]) => (
+                    <section key={location}>
+                      <div className="mb-3 flex items-end justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text-primary)] sm:text-3xl">
+                              Homes in {location}
+                            </h2>
+
+                            <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold text-neutral-600">
+                              {locationProperties.length}
+                            </span>
+                          </div>
+
+                          <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                            Properties available in {location}.
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="hidden shrink-0 items-center gap-2 text-sm font-medium text-[#1b3b2b] transition hover:gap-3 sm:flex"
+                        >
+                          See all
+                          <ArrowRight className="h-4 w-4" />
+                        </button>
+                      </div>
+
+                      <PropertySection
+                        title=""
+                        description=""
+                        properties={locationProperties}
+                      />
+                    </section>
                   ),
                 )}
-              </>
+              </div>
             ))}
         </div>
       </main>

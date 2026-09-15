@@ -17,6 +17,11 @@ import Loader from "../components/ui/Loader";
 import PropertyNotFound from "../features/properties/PropertyNotFound";
 import PropertyError from "../features/properties/PropertyError";
 import PropertyMap from "../features/properties/PropertyMap";
+import NearbyPlaces from "../features/properties/NearbyPlaces";
+import { useAuth } from "../context/AuthContext";
+import useCreateConversation from "../features/messages/useCreateConversation";
+import useGetConversation from "../features/messages/useGetConversation";
+import toast from "react-hot-toast";
 
 export default function PropertyDetail() {
   const [activeImage, setActiveImage] = useState(0);
@@ -30,6 +35,19 @@ export default function PropertyDetail() {
   const isValidId = uuidRegex.test(id);
 
   const { property, isPending, error, refetch } = useProperty(id, isValidId);
+  const { user, isAuthenticated } = useAuth();
+  const ownerId = property?.owner_id;
+  const buyerId = user?.id;
+  const {
+    createConversation,
+    isPending: creating,
+    error: errorCreating,
+  } = useCreateConversation();
+  const { conversation } = useGetConversation({
+    propertyId: id,
+    buyerId,
+    ownerId,
+  });
 
   if (!isValidId) {
     return <Navigate to="/properties" replace />;
@@ -59,13 +77,34 @@ export default function PropertyDetail() {
     );
   }
 
+  async function newConversation() {
+    if (!isAuthenticated) {
+      navigate("/auth");
+      return;
+    }
+    if (conversation) {
+      navigate(`/messages/${conversation.id}`);
+      return;
+    }
+    try {
+      const newConversation = await createConversation({
+        propertyId: id,
+        buyerId,
+        ownerId,
+      });
+
+      navigate(`/messages/${newConversation.id}`);
+    } catch (error) {
+      console.log(error);
+      toast.error("Unable to contact the owner. Please try again.");
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[var(--color-background)] pb-20 pt-10 sm:pt-15">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-10">
-        {/* Navigation */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Back */}
             <button
               type="button"
               onClick={() => navigate(-1)}
@@ -79,7 +118,6 @@ export default function PropertyDetail() {
               <span className="hidden sm:block">Back</span>
             </button>
 
-            {/* Home */}
             <button
               type="button"
               onClick={() => navigate("/properties")}
@@ -113,7 +151,6 @@ export default function PropertyDetail() {
           </div>
         </div>
 
-        {/* Gallery */}
         <section className="relative overflow-hidden rounded-[28px] sm:rounded-[34px]">
           <div
             className={`grid h-[420px] gap-2 sm:h-[520px] ${
@@ -215,7 +252,6 @@ export default function PropertyDetail() {
           </div>
         </section>
 
-        {/* Fullscreen Gallery */}
         {isGalleryOpen && (
           <div className="fixed inset-0 z-[100] bg-black/95 text-white">
             <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-5 py-5 sm:px-8">
@@ -296,45 +332,54 @@ export default function PropertyDetail() {
           </div>
         )}
 
-        {/* Property Details */}
-        <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_390px] lg:gap-16">
-          <div>
-            <div className="border-b border-neutral-200 pb-8">
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-14">
+          <div className="min-w-0">
+            <div className="border-b border-neutral-200 pb-7">
               <div className="mb-4 flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-[#EAF0EC] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#1b3b2b]">
+                <span className="rounded-full bg-[#EAF0EC] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1b3b2b]">
                   {property.listing_status}
                 </span>
 
-                <span className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium text-neutral-600">
+                <span className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[10px] font-medium text-neutral-600">
                   {property.type}
                 </span>
 
                 {property.verified && (
-                  <span className="flex items-center gap-1.5 rounded-full border border-[#1b3b2b]/10 bg-white px-3 py-1.5 text-[11px] font-semibold text-[#1b3b2b]">
+                  <span className="flex items-center gap-1.5 rounded-full border border-[#1b3b2b]/10 bg-white px-3 py-1.5 text-[10px] font-semibold text-[#1b3b2b]">
                     <ShieldCheck size={13} strokeWidth={2} />
                     Verified
                   </span>
                 )}
               </div>
 
-              <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-[var(--color-text)] sm:text-4xl lg:text-[44px] lg:leading-[1.1]">
+              <h1 className="max-w-4xl text-3xl font-semibold leading-[1.08] tracking-[-0.04em] text-[var(--color-text)] sm:text-4xl lg:text-[46px]">
                 {property.title}
               </h1>
 
-              <div className="mt-4 flex items-center gap-2 text-sm text-neutral-500">
+              <div className="mt-4 flex items-start gap-2 text-sm text-neutral-500">
                 <MapPin
                   size={17}
                   strokeWidth={1.7}
-                  className="text-[#1b3b2b]"
+                  className="mt-0.5 shrink-0 text-[#1b3b2b]"
                 />
 
-                <span>{property.location}</span>
+                <div>
+                  <p className="font-medium text-neutral-700">
+                    {property.neighbourhood ||
+                      property.city ||
+                      property.location}
+                  </p>
+
+                  <p className="mt-0.5 text-xs text-neutral-400">
+                    {property.location}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 border-b border-neutral-200 py-7">
+            <div className="grid grid-cols-3 border-b border-neutral-200 py-6 sm:py-7">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b]">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b]">
                   <BedDouble size={19} strokeWidth={1.7} />
                 </div>
 
@@ -343,12 +388,12 @@ export default function PropertyDetail() {
                     {property.beds}
                   </p>
 
-                  <p className="text-xs text-neutral-500">Bedrooms</p>
+                  <p className="mt-0.5 text-xs text-neutral-500">Bedrooms</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 border-l border-neutral-200 pl-4 sm:pl-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b]">
+              <div className="flex items-center gap-3 border-l border-neutral-200 pl-4 sm:pl-7">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b]">
                   <Bath size={19} strokeWidth={1.7} />
                 </div>
 
@@ -357,12 +402,12 @@ export default function PropertyDetail() {
                     {property.bathrooms}
                   </p>
 
-                  <p className="text-xs text-neutral-500">Bathrooms</p>
+                  <p className="mt-0.5 text-xs text-neutral-500">Bathrooms</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 border-l border-neutral-200 pl-4 sm:pl-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b]">
+              <div className="flex items-center gap-3 border-l border-neutral-200 pl-4 sm:pl-7">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b]">
                   <Ruler size={19} strokeWidth={1.7} />
                 </div>
 
@@ -371,82 +416,114 @@ export default function PropertyDetail() {
                     {property.area.toLocaleString()}
                   </p>
 
-                  <p className="text-xs text-neutral-500">sq ft</p>
+                  <p className="mt-0.5 text-xs text-neutral-500">sq ft</p>
                 </div>
               </div>
             </div>
 
-            <section className="border-b border-neutral-200 py-8">
-              <h2 className="text-lg font-semibold text-[var(--color-text)]">
+            <section className="border-b border-neutral-200 py-7 sm:py-8">
+              <h2 className="text-lg font-semibold tracking-[-0.02em] text-[var(--color-text)]">
                 About this property
               </h2>
 
-              <p className="mt-4 max-w-3xl text-sm leading-7 text-neutral-600 sm:text-[15px]">
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-600 sm:text-[15px]">
                 {property.description}
               </p>
             </section>
 
-            <section className="py-8">
-              <h2 className="text-lg font-semibold text-[var(--color-text)]">
-                Location
-              </h2>
+            <section className="py-7 sm:py-8">
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-semibold tracking-[-0.02em] text-[var(--color-text)]">
+                    Location
+                  </h2>
+
+                  <p className="mt-1 text-sm text-neutral-500">
+                    {property.neighbourhood ||
+                      property.city ||
+                      property.location}
+                  </p>
+                </div>
+              </div>
 
               <PropertyMap
                 latitude={property.latitude}
                 longitude={property.longitude}
                 location={property.location}
               />
+              <NearbyPlaces
+                latitude={property.latitude}
+                longitude={property.longitude}
+              />
             </section>
           </div>
 
-          {/* Contact Card */}
           <aside className="lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-[28px] border border-neutral-200 bg-white p-6 shadow-[0_12px_40px_rgba(0,0,0,0.06)] sm:p-7">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-400">
-                {property.listing_status}
-              </p>
+            <div className="rounded-[28px] border border-neutral-200 bg-white p-6 shadow-[0_16px_50px_rgba(0,0,0,0.06)] sm:p-7">
+              <div>
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
+                    {property.listing_status}
+                  </p>
 
-              <div className="mt-2">
-                <span className="text-3xl font-semibold tracking-tight text-[var(--color-text)]">
-                  ₦{property.price.toLocaleString()}
-                </span>
+                  {property.verified && (
+                    <div className="flex items-center gap-1.5 text-[11px] font-medium text-[#1b3b2b]">
+                      <ShieldCheck size={14} strokeWidth={1.9} />
+                      Verified
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-3 flex items-baseline gap-2">
+                  <span className="text-3xl font-semibold tracking-[-0.035em] text-[var(--color-text)] sm:text-[34px]">
+                    ₦{property.price.toLocaleString()}
+                  </span>
+
+                  {property.listing_status === "For Rent" && (
+                    <span className="text-xs text-neutral-400">/ year</span>
+                  )}
+                </div>
+
+                <p className="mt-2 text-sm leading-6 text-neutral-500">
+                  Contact the owner directly about this property.
+                </p>
               </div>
 
-              <p className="mt-2 text-sm text-neutral-500">
-                Contact the owner directly about this property.
-              </p>
+              <div className="my-6 h-px bg-neutral-200" />
 
-              <div className="my-6 border-t border-neutral-200" />
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={newConversation}
+                  disabled={creating}
+                  className="w-full rounded-full bg-[#1b3b2b] px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#142e21] hover:shadow-md active:scale-[0.99]"
+                >
+                  {creating ? "Opening chat..." : "Contact owner"}
+                </button>
 
-              <button
-                type="button"
-                className="w-full rounded-full bg-[#1b3b2b] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#142e21] active:scale-[0.99]"
-              >
-                Contact owner
-              </button>
+                <button
+                  type="button"
+                  className="w-full rounded-full border border-neutral-200 bg-white px-5 py-3.5 text-sm font-semibold text-neutral-800 transition hover:border-neutral-300 hover:bg-neutral-50 active:scale-[0.99]"
+                >
+                  Schedule a viewing
+                </button>
+              </div>
 
-              <button
-                type="button"
-                className="mt-3 w-full rounded-full border border-neutral-200 px-5 py-3.5 text-sm font-semibold text-neutral-800 transition hover:bg-neutral-50 active:scale-[0.99]"
-              >
-                Schedule a viewing
-              </button>
+              <div className="mt-6 rounded-2xl border border-[#1b3b2b]/8 bg-[#F7F8F5] p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#1b3b2b]">
+                    <ShieldCheck size={18} strokeWidth={1.8} />
+                  </div>
 
-              <div className="mt-6 flex items-start gap-3 rounded-2xl bg-[#F7F8F5] p-4">
-                <ShieldCheck
-                  size={19}
-                  strokeWidth={1.8}
-                  className="mt-0.5 shrink-0 text-[#1b3b2b]"
-                />
+                  <div>
+                    <p className="text-xs font-semibold text-neutral-800">
+                      Verified listing
+                    </p>
 
-                <div>
-                  <p className="text-xs font-semibold text-neutral-800">
-                    Verified listing
-                  </p>
-
-                  <p className="mt-1 text-xs leading-5 text-neutral-500">
-                    This property has been verified by MyHome.
-                  </p>
+                    <p className="mt-1 text-xs leading-5 text-neutral-500">
+                      This property has been verified by MyHome.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
