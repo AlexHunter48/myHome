@@ -45,6 +45,7 @@ export default function MenuContent({ isAuthenticated }) {
 
             <button
               type="button"
+              onClick={() => navigate("/messages")}
               className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
             >
               Messages

@@ -439,7 +439,7 @@ export default function Properties() {
               </span>
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm  text-[var(--color-text-secondary)] ">
               Explore verified properties from trusted owners across Lagos and
               beyond, curated for the way you want to live.
             </p>
@@ -498,7 +498,6 @@ export default function Properties() {
               <PropertyEmptyState onClear={handleClearFilters} />
             ) : (
               <div className="space-y-14 lg:space-y-16">
-                {/* Featured Homes */}
                 {!hasFilters && (
                   <section>
                     <div className="mb-3 flex items-end justify-between gap-4">

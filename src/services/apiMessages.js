@@ -69,3 +69,26 @@ export async function sendMessage({ conversationId, senderId, content }) {
 
   return data;
 }
+
+export async function getConversations(userId) {
+  const { data, error } = await supabase
+    .from("conversations")
+    .select(
+      `
+      *,
+      properties (
+        id,
+        title,
+        location
+      )
+    `,
+    )
+    .or(`buyer_id.eq.${userId},owner_id.eq.${userId}`)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}

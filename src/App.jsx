@@ -13,6 +13,8 @@ import ProtectedOwnerRoute from "./features/properties/ProtectedOwnerRoute";
 import PageNotFound from "./pages/PageNotFound";
 import Favorites from "./pages/Favourites";
 import Messages from "./features/messages/Messages";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
+import MessagesPage from "./pages/MessagesPage";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +37,15 @@ export default function App() {
             <Route path="/properties/favourites" element={<Favorites />} />
             <Route path="/properties/:id/images" element={<PropertyImages />} />
             <Route path="/properties/:id" element={<PropertyDetail />} />
-            <Route path="/messages/:conversationId" element={<Messages />} />
+            <Route path="/messages" element={<MessagesPage />} />
+            <Route
+              path="/messages/:conversationId"
+              element={
+                <ProtectedRoute>
+                  <Messages />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
