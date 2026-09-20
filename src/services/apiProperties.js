@@ -258,3 +258,48 @@ export async function removeSavedProperty({ userId, propertyId }) {
     throw new Error(error.message);
   }
 }
+
+export async function getMyProperties({ id, page, pageSize }) {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, error, count } = await supabase
+    .from("properties")
+    .select(
+      `
+      *,
+      property_images (
+        id,
+        image_path,
+        display_order
+      )
+    `,
+      { count: "exact" },
+    )
+    .eq("owner_id", id)
+    .range(from, to);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const formattedProperties = data.map((property) => {
+    const images = property.property_images
+      .sort((a, b) => a.display_order - b.display_order)
+      .map((image) => {
+        const { data } = supabase.storage
+          .from("properties-image")
+          .getPublicUrl(image.image_path);
+
+        return data.publicUrl;
+      });
+
+    return {
+      ...property,
+      images,
+      image: images[0] || "",
+    };
+  });
+
+  return { properties: formattedProperties, count };
+}

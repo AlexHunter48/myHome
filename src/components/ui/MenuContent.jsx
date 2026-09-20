@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 export default function MenuContent({ isAuthenticated }) {
   const navigate = useNavigate();
   const { logOut, isPending } = useLogOut();
-  const { isOwner } = useAuth();
+  const { isOwner, profile } = useAuth();
   function handleLogout() {
     logOut(
       {},
@@ -50,19 +50,38 @@ export default function MenuContent({ isAuthenticated }) {
             >
               Messages
             </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate("/auth");
+                  return;
+                }
+                if (profile?.role === "owner") {
+                  navigate("/properties/new");
+                  return;
+                }
+                navigate("/profile/owner");
+              }}
+              className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
+            >
+              List your property
+            </button>
           </div>
 
           <hr className="my-2 border-neutral-100" />
 
           <div className="space-y-1">
-            {/* isOwner && (
+            {isOwner && (
               <button
                 type="button"
+                onClick={() => navigate("/listings")}
                 className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
               >
-                List your property
+                My Listings
               </button>
-            ) */}
+            )}
 
             <button
               type="button"

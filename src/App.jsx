@@ -15,6 +15,10 @@ import Favorites from "./pages/Favourites";
 import Messages from "./features/messages/Messages";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import MessagesPage from "./pages/MessagesPage";
+import NewMessage from "./features/messages/NewMessage";
+import BecomeOwner from "./profiles/BecomeOwner";
+import MyListings from "./profiles/MyListings";
+import ListingLayout from "./components/layout/ListingLayout";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +42,15 @@ export default function App() {
             <Route path="/properties/:id/images" element={<PropertyImages />} />
             <Route path="/properties/:id" element={<PropertyDetail />} />
             <Route path="/messages" element={<MessagesPage />} />
+
+            <Route
+              path="/messages/new"
+              element={
+                <ProtectedRoute>
+                  <NewMessage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/messages/:conversationId"
               element={
@@ -46,6 +59,17 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/profile/owner" element={<BecomeOwner />} />
+            <Route path="/listings" element={<ListingLayout />}>
+              <Route
+                index
+                element={
+                  <ProtectedOwnerRoute>
+                    <MyListings />
+                  </ProtectedOwnerRoute>
+                }
+              />
+            </Route>
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>

@@ -21,7 +21,7 @@ export default function StickySearch({ location, setLocation }) {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [type, setType] = useState("");
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const navigate = useNavigate();
 
   function showHomes() {
@@ -331,8 +331,18 @@ export default function StickySearch({ location, setLocation }) {
           </div>
 
           <div className="hidden items-center justify-end gap-1 lg:flex">
-            <Link
-              to="#"
+            <button
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate("/auth");
+                  return;
+                }
+                if (profile?.role === "owner") {
+                  navigate("/properties/new");
+                  return;
+                }
+                navigate("/profile/owner");
+              }}
               className="
     whitespace-nowrap
     rounded-full
@@ -347,7 +357,7 @@ export default function StickySearch({ location, setLocation }) {
   "
             >
               List your property
-            </Link>
+            </button>
             <Link
               to="/properties/favourites"
               aria-label="Saved properties"

@@ -8,7 +8,9 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { profile, isPending: isProfileLoading } = useProfile(user?.id);
+  const { profile: fetchedProfile, isPending: isProfileLoading } = useProfile(
+    user?.id,
+  );
 
   useEffect(() => {
     async function getCurrentUser() {
@@ -34,7 +36,7 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const isAuthenticated = !!user;
-  const isOwner = profile?.role === "owner";
+  const isOwner = fetchedProfile?.role === "owner";
 
   const isAuthLoading = loading || (isAuthenticated && isProfileLoading);
 
@@ -42,7 +44,7 @@ export default function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
-        profile,
+        profile: fetchedProfile,
         isAuthenticated,
         loading: isAuthLoading,
         isOwner,

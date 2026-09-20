@@ -80,11 +80,36 @@ export async function getConversations(userId) {
         id,
         title,
         location
+      ),
+      messages (
+        id,
+        content,
+        sender_id,
+        created_at,
+        read_at
       )
     `,
     )
     .or(`buyer_id.eq.${userId},owner_id.eq.${userId}`)
     .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function markMessagesAsRead({ conversationId, userId }) {
+  const { data, error } = await supabase
+    .from("messages")
+    .update({
+      read_at: new Date().toISOString(),
+    })
+    .eq("conversation_id", conversationId)
+    .neq("sender_id", userId)
+    .is("read_at", null)
+    .select();
 
   if (error) {
     throw new Error(error.message);

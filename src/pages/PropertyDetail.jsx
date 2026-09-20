@@ -38,6 +38,8 @@ export default function PropertyDetail() {
   const { user, isAuthenticated } = useAuth();
   const ownerId = property?.owner_id;
   const buyerId = user?.id;
+  console.log(property?.location);
+  console.log(property?.city);
   const {
     createConversation,
     isPending: creating,
@@ -82,22 +84,13 @@ export default function PropertyDetail() {
       navigate("/auth");
       return;
     }
+
     if (conversation) {
       navigate(`/messages/${conversation.id}`);
       return;
     }
-    try {
-      const newConversation = await createConversation({
-        propertyId: id,
-        buyerId,
-        ownerId,
-      });
 
-      navigate(`/messages/${newConversation.id}`);
-    } catch (error) {
-      console.log(error);
-      toast.error("Unable to contact the owner. Please try again.");
-    }
+    navigate(`/messages/new?propertyId=${property.id}`);
   }
 
   return (
@@ -484,8 +477,9 @@ export default function PropertyDetail() {
                   )}
                 </div>
 
-                <p className="mt-2 text-sm leading-6 text-neutral-500">
-                  Contact the owner directly about this property.
+                <p className="mt-3 text-xs leading-5 text-neutral-500">
+                  Additional fees may apply. Confirm all costs with the owner
+                  before proceeding.
                 </p>
               </div>
 

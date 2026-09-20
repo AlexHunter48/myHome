@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Send } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import useGetMessages from "./useGetMessages";
 import useSendMessage from "./useSendMessages";
 import useMessageRealtime from "./useMessagesRealtime";
+import useMarkMessagesAsRead from "./useMarkMessagesAsRead";
 
 export default function Messages() {
   const [message, setMessage] = useState("");
@@ -17,6 +18,17 @@ export default function Messages() {
   const { user } = useAuth();
 
   const { messages, isPending, error } = useGetMessages(conversationId);
+  const { markAsRead } = useMarkMessagesAsRead();
+  useEffect(() => {
+    if (!conversationId || !user?.id) return;
+
+    markAsRead({
+      conversationId,
+      userId: user.id,
+    }).catch((error) => {
+      console.error("Failed to mark messages as read:", error);
+    });
+  }, [conversationId, user?.id, markAsRead]);
 
   const { sendMessage, isPending: sending } = useSendMessage();
 

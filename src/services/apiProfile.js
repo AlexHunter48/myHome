@@ -10,3 +10,20 @@ export async function getProfile(id) {
   if (error) throw new Error(error.message);
   return data;
 }
+
+export async function updateProfileRole({ userId }) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({
+      role: "owner",
+    })
+    .eq("id", userId)
+
+    .select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
