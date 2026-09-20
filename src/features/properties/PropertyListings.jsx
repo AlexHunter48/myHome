@@ -28,9 +28,7 @@ export default function PropertyListings({ featuredHomes, isActive }) {
               ? "Drafts"
               : "All Listings"}
 
-          <span className="ml-1 text-[14px] font-normal text-[var(--color-text-secondary)]">
-            ({featuredHomes?.length ?? 0})
-          </span>
+          <span className="ml-1 text-[14px] font-normal text-[var(--color-text-secondary)]"></span>
         </h2>
 
         <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)]">

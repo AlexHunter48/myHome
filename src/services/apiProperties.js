@@ -259,25 +259,30 @@ export async function removeSavedProperty({ userId, propertyId }) {
   }
 }
 
-export async function getMyProperties({ id, page, pageSize }) {
+export async function getMyProperties({ id, page, pageSize, status }) {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const { data, error, count } = await supabase
+  let query = supabase
     .from("properties")
     .select(
       `
-      *,
-      property_images (
-        id,
-        image_path,
-        display_order
-      )
-    `,
+        *,
+        property_images (
+          id,
+          image_path,
+          display_order
+        )
+      `,
       { count: "exact" },
     )
-    .eq("owner_id", id)
-    .range(from, to);
+    .eq("owner_id", id);
+
+  if (status) {
+    query = query.eq("status", status);
+  }
+
+  const { data, error, count } = await query.range(from, to);
 
   if (error) {
     throw new Error(error.message);
@@ -301,5 +306,36 @@ export async function getMyProperties({ id, page, pageSize }) {
     };
   });
 
-  return { properties: formattedProperties, count };
+  return {
+    properties: formattedProperties,
+    count,
+  };
+}
+
+export async function getMyPropertyCounts({ id }) {
+  const { count: publishedCount, error: publishedError } = await supabase
+    .from("properties")
+    .select("*", { count: "exact", head: true })
+    .eq("owner_id", id)
+    .eq("status", "published");
+
+  const { count: draftCount, error: draftError } = await supabase
+    .from("properties")
+    .select("*", { count: "exact", head: true })
+    .eq("owner_id", id)
+    .eq("status", "draft");
+
+  if (publishedError) {
+    throw new Error(publishedError.message);
+  }
+
+  if (draftError) {
+    throw new Error(draftError.message);
+  }
+
+  return {
+    publishedCount,
+    draftCount,
+    totalCount: (publishedCount ?? 0) + (draftCount ?? 0),
+  };
 }
