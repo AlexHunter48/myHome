@@ -114,7 +114,6 @@ export default function EditListings() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Basic information */}
           <section className="rounded-3xl border border-neutral-200/80 bg-white p-5 shadow-sm sm:p-7">
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-[var(--color-text)]">
@@ -183,7 +182,6 @@ export default function EditListings() {
             </div>
           </section>
 
-          {/* Listing details */}
           <section className="rounded-3xl border border-neutral-200/80 bg-white p-5 shadow-sm sm:p-7">
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-[var(--color-text)]">
@@ -316,7 +314,6 @@ export default function EditListings() {
             </div>
           </section>
 
-          {/* Property features */}
           <section className="rounded-3xl border border-neutral-200/80 bg-white p-5 shadow-sm sm:p-7">
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-[var(--color-text)]">

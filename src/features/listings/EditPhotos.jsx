@@ -49,24 +49,20 @@ export default function EditPhotos() {
     event.target.value = "";
   }
 
-  // Delete photo locally
   function handleDelete(imageId) {
     setLocalImages((current) =>
       current.filter((image) => image.id !== imageId),
     );
   }
 
-  // Start dragging
   function handleDragStart(index) {
     draggedIndex.current = index;
   }
 
-  // Allow dropping
   function handleDragOver(event) {
     event.preventDefault();
   }
 
-  // Reorder photos
   function handleDrop(dropIndex) {
     const dragIndex = draggedIndex.current;
 
@@ -92,7 +88,6 @@ export default function EditPhotos() {
     draggedIndex.current = null;
   }
 
-  // Save changes
   function handleSave() {
     editImages(
       {
@@ -154,7 +149,6 @@ export default function EditPhotos() {
   return (
     <main className="min-h-screen bg-[var(--color-background)] px-4 pb-20 pt-28 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
         <div className="mb-10">
           <button
             type="button"
@@ -181,7 +175,6 @@ export default function EditPhotos() {
               </p>
             </div>
 
-            {/* File input */}
             <input
               ref={fileInputRef}
               type="file"
@@ -191,7 +184,6 @@ export default function EditPhotos() {
               onChange={handleUpload}
             />
 
-            {/* Add photos */}
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -203,7 +195,6 @@ export default function EditPhotos() {
           </div>
         </div>
 
-        {/* Photos section */}
         <section className="rounded-3xl border border-neutral-200/80 bg-white p-5 shadow-[0_8px_35px_rgba(0,0,0,0.025)] sm:p-7">
           <div className="mb-6 flex flex-col gap-3 border-b border-neutral-200/80 pb-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -236,7 +227,6 @@ export default function EditPhotos() {
                   onDragEnd={handleDragEnd}
                   className="group relative cursor-grab overflow-hidden rounded-2xl border border-neutral-200/80 bg-neutral-100 transition active:cursor-grabbing"
                 >
-                  {/* Image */}
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
                       src={image.imageUrl}
@@ -246,7 +236,6 @@ export default function EditPhotos() {
                     />
                   </div>
 
-                  {/* Top controls */}
                   <div className="absolute left-3 right-3 top-3 flex items-center justify-between">
                     {index === 0 ? (
                       <span className="flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-medium text-[#1b3b2b] shadow-sm backdrop-blur">
@@ -263,7 +252,6 @@ export default function EditPhotos() {
                       </span>
                     )}
 
-                    {/* Delete */}
                     <button
                       type="button"
                       onClick={(event) => {
@@ -277,7 +265,6 @@ export default function EditPhotos() {
                     </button>
                   </div>
 
-                  {/* Bottom controls */}
                   <div className="flex items-center justify-between border-t border-neutral-200/80 bg-white px-4 py-3">
                     <div className="flex items-center gap-2 text-xs text-neutral-500">
                       <GripVertical size={15} strokeWidth={1.8} />
@@ -321,7 +308,6 @@ export default function EditPhotos() {
           )}
         </section>
 
-        {/* Save bar */}
         <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-neutral-200/80 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <div>
             <p className="text-sm font-medium text-[var(--color-text)]">
@@ -344,7 +330,6 @@ export default function EditPhotos() {
           </button>
         </div>
 
-        {/* Note */}
         <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#dfe7e1] bg-[#f4f7f4] p-4">
           <Star
             size={17}
