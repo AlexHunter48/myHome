@@ -336,9 +336,18 @@ export async function getMyPropertyCounts({ id }) {
 }
 
 export async function getProperty(id) {
-  const { data, error } = await supabase
+  const { data: property, error } = await supabase
     .from("properties")
-    .select("*")
+    .select(
+      `
+      *,
+      property_images (
+        id,
+        image_path,
+        display_order
+      )
+      `,
+    )
     .eq("id", id)
     .single();
 
@@ -346,7 +355,25 @@ export async function getProperty(id) {
     throw new Error(error.message);
   }
 
-  return data;
+  const images = property.property_images
+    .sort((a, b) => a.display_order - b.display_order)
+    .map((image) => {
+      const { data } = supabase.storage
+        .from("properties-image")
+        .getPublicUrl(image.image_path);
+
+      return {
+        ...image,
+        url: data.publicUrl,
+      };
+    });
+
+  return {
+    ...property,
+    property_images: images,
+    images: images.map((image) => image.url),
+    image: images[0]?.url || "",
+  };
 }
 
 export async function updateProperty({ id, data }) {
@@ -499,4 +526,15 @@ export async function editPropertyImages({
   }
 
   return orderedImages;
+}
+
+export async function recordPropertyView({ propertyId, visitorId }) {
+  const { error } = await supabase.rpc("increment_property_views", {
+    property_id: propertyId,
+    visitor_id: visitorId,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }

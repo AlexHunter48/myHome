@@ -41,7 +41,6 @@ const categories = [
     icon: Church,
   },
 ];
-
 export default function NearbyPlaces({ latitude, longitude }) {
   const {
     data: nearbyPlaces,
@@ -58,11 +57,81 @@ export default function NearbyPlaces({ latitude, longitude }) {
   });
 
   if (isPending) {
-    return <div>Loading nearby places...</div>;
+    return (
+      <section className="border-b border-neutral-200 py-8">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold tracking-tight">
+            What's nearby
+          </h2>
+
+          <p className="mt-1 text-sm text-neutral-500">
+            Important places around this home.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+          <p className="text-sm text-neutral-500">Finding nearby places...</p>
+        </div>
+      </section>
+    );
   }
 
   if (error) {
-    return <div>Unable to load nearby places.</div>;
+    return (
+      <section className="border-b border-neutral-200 py-8">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold tracking-tight">
+            What's nearby
+          </h2>
+
+          <p className="mt-1 text-sm text-neutral-500">
+            Important places around this home.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+          <p className="text-sm font-medium text-neutral-800">
+            Nearby places unavailable
+          </p>
+
+          <p className="mt-1 text-sm leading-6 text-neutral-500">
+            We couldn't retrieve nearby places for this location right now.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  const availablePlaces = categories.filter((category) => {
+    const places = nearbyPlaces?.[category.key] ?? [];
+    return places.length > 0;
+  });
+
+  if (availablePlaces.length === 0) {
+    return (
+      <section className="border-b border-neutral-200 py-8">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold tracking-tight">
+            What's nearby
+          </h2>
+
+          <p className="mt-1 text-sm text-neutral-500">
+            Important places around this home.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-neutral-200 bg-white p-6">
+          <p className="text-sm font-medium text-neutral-800">
+            No nearby places found
+          </p>
+
+          <p className="mt-1 max-w-lg text-sm leading-6 text-neutral-500">
+            We couldn't find any nearby schools, banks, healthcare, shopping,
+            gyms, or places of worship for this location.
+          </p>
+        </div>
+      </section>
+    );
   }
 
   return (

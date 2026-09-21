@@ -11,7 +11,7 @@ import {
   House,
 } from "lucide-react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useProperty from "../features/properties/useProperty";
 import Loader from "../components/ui/Loader";
 import PropertyNotFound from "../features/properties/PropertyNotFound";
@@ -21,11 +21,14 @@ import NearbyPlaces from "../features/properties/NearbyPlaces";
 import { useAuth } from "../context/AuthContext";
 import useCreateConversation from "../features/messages/useCreateConversation";
 import useGetConversation from "../features/messages/useGetConversation";
-import toast from "react-hot-toast";
+
+import useRecordPropertyViews from "../hooks/useRecordPropertyViews";
+import { getVisitorId } from "../utils/visitorId";
 
 export default function PropertyDetail() {
   const [activeImage, setActiveImage] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -36,10 +39,21 @@ export default function PropertyDetail() {
 
   const { property, isPending, error, refetch } = useProperty(id, isValidId);
   const { user, isAuthenticated } = useAuth();
+  const { recordView } = useRecordPropertyViews();
+  useEffect(() => {
+    if (!property?.id) return;
+
+    const visitorId = user?.id ? null : getVisitorId();
+
+    recordView({
+      propertyId: property.id,
+      visitorId,
+    });
+  }, [property?.id, user?.id, recordView]);
+
   const ownerId = property?.owner_id;
   const buyerId = user?.id;
-  console.log(property?.location);
-  console.log(property?.city);
+
   const {
     createConversation,
     isPending: creating,
@@ -69,13 +83,13 @@ export default function PropertyDetail() {
 
   function nextImage() {
     setActiveImage((current) =>
-      current === property.property_images.length - 1 ? 0 : current + 1,
+      current === property?.property_images?.length - 1 ? 0 : current + 1,
     );
   }
 
   function previousImage() {
     setActiveImage((current) =>
-      current === 0 ? property.property_images.length - 1 : current - 1,
+      current === 0 ? property?.property_images?.length - 1 : current - 1,
     );
   }
 
@@ -92,7 +106,6 @@ export default function PropertyDetail() {
 
     navigate(`/messages/new?propertyId=${property.id}`);
   }
-
   return (
     <main className="min-h-screen bg-[var(--color-background)] pb-20 pt-10 sm:pt-15">
       <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-10">
@@ -147,9 +160,9 @@ export default function PropertyDetail() {
         <section className="relative overflow-hidden rounded-[28px] sm:rounded-[34px]">
           <div
             className={`grid h-[420px] gap-2 sm:h-[520px] ${
-              property?.property_images.length === 1
+              property?.property_images?.length === 1
                 ? "lg:grid-cols-1"
-                : property.property_images.length === 2
+                : property?.property_images?.length === 2
                   ? "lg:grid-cols-[2fr_1fr]"
                   : "lg:grid-cols-2"
             }`}
@@ -160,11 +173,13 @@ export default function PropertyDetail() {
                 onClick={() => setIsGalleryOpen(true)}
                 className="group relative h-full w-full cursor-pointer"
               >
-                <img
-                  src={property.property_images[activeImage]?.url}
-                  alt={property?.title}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.01]"
-                />
+                {property?.property_images?.[activeImage]?.url && (
+                  <img
+                    src={property.property_images[activeImage].url}
+                    alt={property.title || "Property"}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.01]"
+                  />
+                )}
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
@@ -176,10 +191,10 @@ export default function PropertyDetail() {
               </button>
 
               <div className="pointer-events-none absolute bottom-5 left-5 rounded-full bg-black/45 px-3.5 py-2 text-xs font-medium text-white backdrop-blur-md">
-                {activeImage + 1} / {property.property_images.length}
+                {activeImage + 1} / {property?.property_images?.length ?? 0}
               </div>
 
-              {property.property_images.length > 1 && (
+              {property?.property_images?.length > 1 && (
                 <div className="absolute bottom-5 right-5 flex gap-2">
                   <button
                     type="button"
@@ -204,12 +219,12 @@ export default function PropertyDetail() {
 
             <div
               className={`hidden gap-2 lg:grid ${
-                property.property_images.length === 2
+                property?.property_images?.length === 2
                   ? "lg:grid-cols-1"
                   : "lg:grid-cols-2"
               }`}
             >
-              {property.property_images.slice(1, 5).map((image, index) => {
+              {property?.property_images?.slice(1, 5).map((image, index) => {
                 const imageIndex = index + 1;
                 const isActive = activeImage === imageIndex;
 
@@ -227,7 +242,7 @@ export default function PropertyDetail() {
                   >
                     <img
                       src={image.url}
-                      alt={`${property.title} ${index + 2}`}
+                      alt={`${property?.title || "Property"} ${index + 2}`}
                       className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
                     />
 
@@ -258,7 +273,7 @@ export default function PropertyDetail() {
               </button>
 
               <div className="absolute left-1/2 -translate-x-1/2 text-sm font-medium tracking-wide text-white/90">
-                {activeImage + 1} / {property.property_images.length}
+                {activeImage + 1} / {property?.property_images?.length ?? 0}
               </div>
 
               <div className="hidden sm:block">
@@ -267,14 +282,16 @@ export default function PropertyDetail() {
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center px-4 pb-28 pt-20 sm:px-16">
-              <img
-                src={property.property_images[activeImage].url}
-                alt={property.title}
-                className="max-h-full max-w-full object-contain"
-              />
+              {property?.property_images?.[activeImage]?.url && (
+                <img
+                  src={property.property_images[activeImage].url}
+                  alt={property?.title || "Property"}
+                  className="max-h-full max-w-full object-contain"
+                />
+              )}
             </div>
 
-            {property.property_images.length > 1 && (
+            {property?.property_images?.length > 1 && (
               <>
                 <button
                   type="button"
@@ -298,7 +315,7 @@ export default function PropertyDetail() {
 
             <div className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/50 px-4 py-4 backdrop-blur-xl">
               <div className="mx-auto flex max-w-[1400px] gap-2 overflow-x-auto pb-1">
-                {property.property_images.map((image, index) => (
+                {property?.property_images?.map((image, index) => (
                   <button
                     key={image.id}
                     type="button"
@@ -311,7 +328,7 @@ export default function PropertyDetail() {
                   >
                     <img
                       src={image.url}
-                      alt={`${property.title} ${index + 1}`}
+                      alt={`${property?.title || "Property"} ${index + 1}`}
                       className="h-full w-full object-cover"
                     />
 
@@ -330,14 +347,14 @@ export default function PropertyDetail() {
             <div className="border-b border-neutral-200 pb-7">
               <div className="mb-4 flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-[#EAF0EC] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1b3b2b]">
-                  {property.listing_status}
+                  {property?.listing_status}
                 </span>
 
                 <span className="rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[10px] font-medium text-neutral-600">
-                  {property.type}
+                  {property?.type}
                 </span>
 
-                {property.verified && (
+                {property?.verified && (
                   <span className="flex items-center gap-1.5 rounded-full border border-[#1b3b2b]/10 bg-white px-3 py-1.5 text-[10px] font-semibold text-[#1b3b2b]">
                     <ShieldCheck size={13} strokeWidth={2} />
                     Verified
@@ -346,7 +363,7 @@ export default function PropertyDetail() {
               </div>
 
               <h1 className="max-w-4xl text-3xl font-semibold leading-[1.08] tracking-[-0.04em] text-[var(--color-text)] sm:text-4xl lg:text-[46px]">
-                {property.title}
+                {property?.title}
               </h1>
 
               <div className="mt-4 flex items-start gap-2 text-sm text-neutral-500">
@@ -358,13 +375,13 @@ export default function PropertyDetail() {
 
                 <div>
                   <p className="font-medium text-neutral-700">
-                    {property.neighbourhood ||
-                      property.city ||
-                      property.location}
+                    {property?.neighbourhood ||
+                      property?.city ||
+                      property?.location}
                   </p>
 
                   <p className="mt-0.5 text-xs text-neutral-400">
-                    {property.location}
+                    {property?.location}
                   </p>
                 </div>
               </div>
@@ -378,7 +395,7 @@ export default function PropertyDetail() {
 
                 <div>
                   <p className="text-sm font-semibold text-neutral-900">
-                    {property.beds}
+                    {property?.beds}
                   </p>
 
                   <p className="mt-0.5 text-xs text-neutral-500">Bedrooms</p>
@@ -392,7 +409,7 @@ export default function PropertyDetail() {
 
                 <div>
                   <p className="text-sm font-semibold text-neutral-900">
-                    {property.bathrooms}
+                    {property?.bathrooms}
                   </p>
 
                   <p className="mt-0.5 text-xs text-neutral-500">Bathrooms</p>
@@ -406,7 +423,7 @@ export default function PropertyDetail() {
 
                 <div>
                   <p className="text-sm font-semibold text-neutral-900">
-                    {property.area.toLocaleString()}
+                    {property?.area?.toLocaleString()}
                   </p>
 
                   <p className="mt-0.5 text-xs text-neutral-500">sq ft</p>
@@ -420,7 +437,7 @@ export default function PropertyDetail() {
               </h2>
 
               <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-600 sm:text-[15px]">
-                {property.description}
+                {property?.description}
               </p>
             </section>
 
@@ -432,21 +449,22 @@ export default function PropertyDetail() {
                   </h2>
 
                   <p className="mt-1 text-sm text-neutral-500">
-                    {property.neighbourhood ||
-                      property.city ||
-                      property.location}
+                    {property?.neighbourhood ||
+                      property?.city ||
+                      property?.location}
                   </p>
                 </div>
               </div>
 
               <PropertyMap
-                latitude={property.latitude}
-                longitude={property.longitude}
-                location={property.location}
+                latitude={property?.latitude}
+                longitude={property?.longitude}
+                location={property?.location}
               />
+
               <NearbyPlaces
-                latitude={property.latitude}
-                longitude={property.longitude}
+                latitude={property?.latitude}
+                longitude={property?.longitude}
               />
             </section>
           </div>
@@ -456,10 +474,10 @@ export default function PropertyDetail() {
               <div>
                 <div className="flex items-center justify-between">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-400">
-                    {property.listing_status}
+                    {property?.listing_status}
                   </p>
 
-                  {property.verified && (
+                  {property?.verified && (
                     <div className="flex items-center gap-1.5 text-[11px] font-medium text-[#1b3b2b]">
                       <ShieldCheck size={14} strokeWidth={1.9} />
                       Verified
@@ -469,10 +487,10 @@ export default function PropertyDetail() {
 
                 <div className="mt-3 flex items-baseline gap-2">
                   <span className="text-3xl font-semibold tracking-[-0.035em] text-[var(--color-text)] sm:text-[34px]">
-                    ₦{property.price.toLocaleString()}
+                    ₦{property?.price?.toLocaleString()}
                   </span>
 
-                  {property.listing_status === "For Rent" && (
+                  {property?.listing_status === "For Rent" && (
                     <span className="text-xs text-neutral-400">/ year</span>
                   )}
                 </div>

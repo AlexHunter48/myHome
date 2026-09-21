@@ -8,7 +8,7 @@ import {
   Heart,
   Navigation,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Links, useNavigate } from "react-router-dom";
 import myhome from "../../assets/myhome-logo-exact.svg";
 import Modal from "../../components/ui/Modal";
 import { useState } from "react";
@@ -45,7 +45,10 @@ export default function StickySearch({ location, setLocation }) {
     <Modal>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-neutral-200/70 bg-[var(--color-background)]/95 shadow-sm backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center px-4 sm:px-6 lg:h-[88px] lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-6 lg:px-10">
-          <div className="flex shrink-0 items-center justify-start">
+          <Link
+            className="flex shrink-0 items-center justify-start"
+            to="/properties"
+          >
             <img
               src={myhome}
               alt="MyHome"
@@ -54,7 +57,7 @@ export default function StickySearch({ location, setLocation }) {
             <h1 className="text-2xl lg:text-3xl text-(--color-primary) font-medium tracking-tight font-sans hidden lg:block">
               MyHome
             </h1>
-          </div>
+          </Link>
 
           <div className="ml-auto flex min-w-0 items-center lg:mx-auto lg:mt-1">
             <div className="flex w-[min(760px,calc(100vw-138px))] items-center rounded-full border border-neutral-200 bg-white p-1 shadow-sm lg:w-[min(760px,55vw)] lg:p-1.5">

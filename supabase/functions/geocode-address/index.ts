@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     }
 
     const properties = data.features[0].properties;
-    console.log(properties);
+   
 
     return new Response(
       JSON.stringify({

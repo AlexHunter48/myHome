@@ -127,6 +127,7 @@ export default function PropertyListings({ featuredHomes, isActive }) {
 
                 <button
                   type="button"
+                  onClick={() => navigate(`${property.id}/manage`)}
                   className="mt-7 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1b3b2b] px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-[#163225] hover:shadow-md lg:hidden"
                 >
                   Manage listing

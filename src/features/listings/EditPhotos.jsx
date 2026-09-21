@@ -152,11 +152,11 @@ export default function EditPhotos() {
         <div className="mb-10">
           <button
             type="button"
-            onClick={() => navigate(`/listings`)}
+            onClick={() => navigate(-1)}
             className="mb-7 flex items-center gap-2 text-sm font-medium text-neutral-600 transition hover:text-[#1b3b2b]"
           >
             <ArrowLeft size={17} strokeWidth={1.8} />
-            Back to listing
+            Back
           </button>
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">

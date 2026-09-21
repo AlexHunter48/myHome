@@ -3,14 +3,21 @@ import useGetProperty from "../properties/useGetProperty";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import useUpdateProperty from "../properties/useUpdateProperty";
+import { geocodeAddress } from "../../services/apiLocation";
+
+import useUpdatePropertyCoordinates from "../properties/useUpdatePropertyCoordinates";
 import toast from "react-hot-toast";
 import { ArrowLeft } from "lucide-react";
 
 export default function EditListings() {
   const { id } = useParams();
+
   const { property, isPending: isLoading, error } = useGetProperty(id);
 
   const { updateProperty, isPending: isUpdating } = useUpdateProperty();
+
+  const { updateCoordinates, isPending: isUpdatingCoordinates } =
+    useUpdatePropertyCoordinates();
 
   const navigate = useNavigate();
 
@@ -37,14 +44,51 @@ export default function EditListings() {
     }
   }, [property, reset]);
 
-  function onSubmit(data) {
+  async function onSubmit(data) {
     updateProperty(
       {
         id,
         data,
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          if (data.location !== property.location) {
+            try {
+              const coordinates = await geocodeAddress(data.location);
+
+              if (coordinates) {
+                updateCoordinates(
+                  {
+                    propertyId: id,
+                    coordinates,
+                  },
+                  {
+                    onSuccess: () => {
+                      toast.success("Listing updated successfully");
+                      navigate("/listings");
+                    },
+                    onError: (error) => {
+                      toast.error(
+                        error.message ||
+                          "Listing updated, but location could not be updated.",
+                      );
+                      navigate("/listings");
+                    },
+                  },
+                );
+
+                return;
+              }
+            } catch (error) {
+              toast.error(
+                error.message ||
+                  "Listing updated, but location could not be updated.",
+              );
+              navigate("/listings");
+              return;
+            }
+          }
+
           toast.success("Listing updated successfully");
           navigate("/listings");
         },
@@ -85,6 +129,8 @@ export default function EditListings() {
       </main>
     );
   }
+
+  const isSaving = isUpdating || isUpdatingCoordinates;
 
   return (
     <main className="min-h-screen bg-[var(--color-background)] px-4 pb-16 pt-28 sm:px-6 lg:px-10">
@@ -429,10 +475,10 @@ export default function EditListings() {
 
             <button
               type="submit"
-              disabled={isUpdating}
+              disabled={isSaving}
               className="rounded-full bg-[#1b3b2b] px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#142e21] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isUpdating ? "Saving changes..." : "Save changes"}
+              {isSaving ? "Saving changes..." : "Save changes"}
             </button>
           </div>
         </form>

@@ -1,12 +1,14 @@
 import { SlidersHorizontal, MapPin, X, House, ArrowRight } from "lucide-react";
 import StickySearch from "../home/StickySearch";
 import PropertySection from "./PropertySection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useProperties from "./useProperties";
 import FilterModal, { useFilter } from "../../components/ui/FilterModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PropertyEmptyState from "./PropertyEmptyState";
 import formatPriceInput from "../../utils/formatInputCurrency";
+import { useAuth } from "../../context/AuthContext";
+import { getVisitorId } from "../../utils/visitorId";
 
 const filters = ["All", "For Sale", "For Rent"];
 
@@ -318,6 +320,14 @@ export default function Properties() {
     state: "Lagos",
     country: "Nigeria",
   });
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user?.id) return;
+
+    getVisitorId();
+  }, [user?.id]);
 
   const [searchParams, setSearchParams] = useSearchParams();
 

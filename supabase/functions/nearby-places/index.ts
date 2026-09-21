@@ -47,7 +47,6 @@ function isValidPlace(properties: any) {
 
   const nameLower = name.toLowerCase();
 
-  // Things that clearly aren't places we want to display
   const invalidWords = [
     "road",
     "street",
@@ -61,11 +60,66 @@ function isValidPlace(properties: any) {
     "roundabout",
   ];
 
-  return !invalidWords.some((word) =>
-    nameLower === word ||
-    nameLower.endsWith(` ${word}`) ||
-    nameLower.includes(` ${word},`)
+  return !invalidWords.some(
+    (word) =>
+      nameLower === word ||
+      nameLower.endsWith(` ${word}`) ||
+      nameLower.includes(` ${word},`),
   );
+}
+
+async function fetchPlaces({
+  latitude,
+  longitude,
+  category,
+  radius,
+  apiKey,
+}: {
+  latitude: number;
+  longitude: number;
+  category: string;
+  radius: number;
+  apiKey: string;
+}) {
+  const params = new URLSearchParams({
+    categories: category,
+    filter: `circle:${longitude},${latitude},${radius}`,
+    bias: `proximity:${longitude},${latitude}`,
+    limit: "10",
+    apiKey,
+  });
+
+  const response = await fetch(
+    `https://api.geoapify.com/v2/places?${params}`,
+  );
+
+  if (!response.ok) {
+    console.error(
+      `Geoapify failed for ${category}:`,
+      await response.text(),
+    );
+
+    return [];
+  }
+
+  const data = await response.json();
+
+  return (data.features ?? [])
+    .filter((place: any) => isValidPlace(place.properties))
+    .map((place: any) => {
+      const properties = place.properties;
+
+      return {
+        name: properties.name,
+        address:
+          properties.address_line2 ||
+          properties.address_line1 ||
+          null,
+        distance: properties.distance ?? null,
+        latitude: properties.lat ?? null,
+        longitude: properties.lon ?? null,
+      };
+    });
 }
 
 Deno.serve(async (req) => {
@@ -105,50 +159,27 @@ Deno.serve(async (req) => {
     const results: Record<string, unknown[]> = {};
 
     for (const item of categories) {
-      const params = new URLSearchParams({
-        categories: item.category,
-        filter: `circle:${longitude},${latitude},5000`,
-        bias: `proximity:${longitude},${latitude}`,
-        limit: "10",
+      
+      let places = await fetchPlaces({
+        latitude,
+        longitude,
+        category: item.category,
+        radius: 5000,
         apiKey: GEOAPIFY_API_KEY,
       });
 
-      const response = await fetch(
-        `https://api.geoapify.com/v2/places?${params}`,
-      );
-
-      if (!response.ok) {
-        console.error(
-          `Geoapify failed for ${item.label}:`,
-          await response.text(),
-        );
-
-        results[item.key] = [];
-        continue;
+     
+      if (places.length === 0) {
+        places = await fetchPlaces({
+          latitude,
+          longitude,
+          category: item.category,
+          radius: 15000,
+          apiKey: GEOAPIFY_API_KEY,
+        });
       }
 
-      const data = await response.json();
-
-      const places = data.features ?? [];
-
-      const validPlaces = places
-        .filter((place: any) => isValidPlace(place.properties))
-        .map((place: any) => {
-          const properties = place.properties;
-
-          return {
-            name: properties.name,
-            address:
-              properties.address_line2 ||
-              properties.address_line1 ||
-              null,
-            distance: properties.distance ?? null,
-            latitude: properties.lat ?? null,
-            longitude: properties.lon ?? null,
-          };
-        });
-
-      results[item.key] = validPlaces;
+      results[item.key] = places;
     }
 
     return new Response(
