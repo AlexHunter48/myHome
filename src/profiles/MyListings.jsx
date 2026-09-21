@@ -9,10 +9,12 @@ import Pagination from "../components/ui/Pagination";
 import useGetMyPropertyCounts from "../features/properties/useGetMyPropertyCount";
 import ListingLoader from "../components/ui/ListingLoader";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 export default function MyListings() {
   const [isActive, setIsActive] = useState("published");
   const [page, setPage] = useState(1);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo({
@@ -98,6 +100,7 @@ export default function MyListings() {
 
             <button
               type="button"
+              onClick={() => navigate("/properties/new")}
               className="group flex w-fit shrink-0 items-center gap-2 rounded-2xl bg-[#1b3b2b] px-5 py-3.5 text-sm font-medium text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-[#163225] hover:shadow-md xl:absolute xl:bottom-1/2 xl:right-1/3"
             >
               <Plus

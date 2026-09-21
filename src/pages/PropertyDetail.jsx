@@ -147,7 +147,7 @@ export default function PropertyDetail() {
         <section className="relative overflow-hidden rounded-[28px] sm:rounded-[34px]">
           <div
             className={`grid h-[420px] gap-2 sm:h-[520px] ${
-              property.property_images.length === 1
+              property?.property_images.length === 1
                 ? "lg:grid-cols-1"
                 : property.property_images.length === 2
                   ? "lg:grid-cols-[2fr_1fr]"

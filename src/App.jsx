@@ -19,6 +19,8 @@ import NewMessage from "./features/messages/NewMessage";
 import BecomeOwner from "./profiles/BecomeOwner";
 import MyListings from "./profiles/MyListings";
 import ListingLayout from "./components/layout/ListingLayout";
+import EditListings from "./features/listings/EditListings";
+import EditPhotos from "./features/listings/EditPhotos";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +68,23 @@ export default function App() {
                 element={
                   <ProtectedOwnerRoute>
                     <MyListings />
+                  </ProtectedOwnerRoute>
+                }
+              />
+
+              <Route
+                path=":id/edit"
+                element={
+                  <ProtectedOwnerRoute>
+                    <EditListings />
+                  </ProtectedOwnerRoute>
+                }
+              />
+              <Route
+                path=":id/edit/photos"
+                element={
+                  <ProtectedOwnerRoute>
+                    <EditPhotos />
                   </ProtectedOwnerRoute>
                 }
               />

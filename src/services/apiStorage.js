@@ -1,6 +1,10 @@
 import supabase from "./supabase";
 
-export async function uploadPropertyImages({ propertyId, images }) {
+export async function uploadPropertyImages({
+  propertyId,
+  images,
+  startingOrder = 0,
+}) {
   const uploadedImages = [];
 
   for (let i = 0; i < images.length; i++) {
@@ -21,7 +25,7 @@ export async function uploadPropertyImages({ propertyId, images }) {
     uploadedImages.push({
       property_id: propertyId,
       image_path: filePath,
-      display_order: i,
+      display_order: startingOrder + i,
     });
   }
 

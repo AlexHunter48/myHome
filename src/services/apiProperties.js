@@ -15,8 +15,6 @@ export async function getProperties(filters = {}) {
     )
     .eq("status", "published");
 
-  console.log(filters?.listingStatus);
-
   if (filters.minimumPrice) {
     query = query.gte("price", Number(filters.minimumPrice));
   }
@@ -46,9 +44,6 @@ export async function getProperties(filters = {}) {
   }
 
   const { data: properties, error } = await query;
-  console.log("FILTER:", filters.listingStatus);
-  console.log("RESULT:", properties);
-  console.log("ERROR:", error);
 
   if (error) throw new Error(error.message);
 
@@ -338,4 +333,170 @@ export async function getMyPropertyCounts({ id }) {
     draftCount,
     totalCount: (publishedCount ?? 0) + (draftCount ?? 0),
   };
+}
+
+export async function getProperty(id) {
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function updateProperty({ id, data }) {
+  const { data: property, error } = await supabase
+    .from("properties")
+    .update(data)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return property;
+}
+
+export async function getPropertyImages(propertyId) {
+  const { data, error } = await supabase
+    .from("property_images")
+    .select("id, image_path, display_order")
+    .eq("property_id", propertyId)
+    .order("display_order", { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const images = data.map((image) => {
+    const { data } = supabase.storage
+      .from("properties-image")
+      .getPublicUrl(image.image_path);
+
+    return {
+      ...image,
+      imageUrl: data.publicUrl,
+    };
+  });
+
+  return images;
+}
+
+export async function editPropertyImages({
+  propertyId,
+  originalImages,
+  finalImages,
+}) {
+  const finalExistingIds = new Set(
+    finalImages.filter((image) => !image.isNew).map((image) => image.id),
+  );
+
+  const deletedImages = originalImages.filter(
+    (image) => !finalExistingIds.has(image.id),
+  );
+
+  if (deletedImages.length > 0) {
+    const pathsToDelete = deletedImages.map((image) => image.image_path);
+
+    const { error: storageError } = await supabase.storage
+      .from("properties-image")
+      .remove(pathsToDelete);
+
+    if (storageError) {
+      throw new Error(storageError.message);
+    }
+
+    const deletedIds = deletedImages.map((image) => image.id);
+
+    const { error: deleteError } = await supabase
+      .from("property_images")
+      .delete()
+      .in("id", deletedIds);
+
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
+  }
+
+  const newImages = finalImages.filter((image) => image.isNew);
+
+  const uploadedImages = [];
+
+  for (const image of newImages) {
+    const fileName = `${crypto.randomUUID()}-${image.file.name}`;
+    const filePath = `${propertyId}/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("properties-image")
+      .upload(filePath, image.file);
+
+    if (uploadError) {
+      throw new Error(uploadError.message);
+    }
+
+    uploadedImages.push({
+      property_id: propertyId,
+      image_path: filePath,
+    });
+  }
+
+  let insertedImages = [];
+
+  if (uploadedImages.length > 0) {
+    const { data, error: insertError } = await supabase
+      .from("property_images")
+      .insert(uploadedImages)
+      .select("id, image_path");
+
+    if (insertError) {
+      throw new Error(insertError.message);
+    }
+
+    insertedImages = data;
+  }
+
+  const { data: currentImages, error: fetchError } = await supabase
+    .from("property_images")
+    .select("id, image_path")
+    .eq("property_id", propertyId);
+
+  if (fetchError) {
+    throw new Error(fetchError.message);
+  }
+
+  const orderedImages = finalImages
+    .map((localImage) => {
+      if (!localImage.isNew) {
+        return currentImages.find((image) => image.id === localImage.id);
+      }
+
+      return insertedImages.find((image) =>
+        image.image_path.endsWith(`-${localImage.file.name}`),
+      );
+    })
+    .filter(Boolean);
+
+  for (let index = 0; index < orderedImages.length; index++) {
+    const image = orderedImages[index];
+
+    const { error: updateError } = await supabase
+      .from("property_images")
+      .update({
+        display_order: index,
+      })
+      .eq("id", image.id);
+
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
+  }
+
+  return orderedImages;
 }
