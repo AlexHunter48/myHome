@@ -12,7 +12,6 @@ import useSaveProperty from "../properties/useSaveProperty";
 import useCheckSavedProperty from "../properties/useCheckedSavedProperty";
 import { formatCurrency } from "../../utils/formatCurrency";
 import useRemoveSavedProperty from "../properties/useRemoveSavedProperty";
-
 export default function HomeCard({
   id,
   image = "",
@@ -23,8 +22,10 @@ export default function HomeCard({
   location,
   type = "For Sale",
   verified = true,
+  variant = "default",
 }) {
   const navigate = useNavigate();
+
   const propertyImages = images.length > 0 ? images : image ? [image] : [];
 
   const [currentImage, setCurrentImage] = useState(0);
@@ -33,9 +34,7 @@ export default function HomeCard({
   const { saveProperty, isPending } = useSaveProperty();
 
   const propertyId = id;
-
   const userId = user?.id;
-  console.log(isAuthenticated);
 
   const { isSaved, isPending: isCheckingSaved } = useCheckSavedProperty({
     userId,
@@ -65,11 +64,18 @@ export default function HomeCard({
     setCurrentImage(index);
   };
 
+  const isSimilar = variant === "similar";
+
   return (
-    <article className="group w-full overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)]">
+    <article
+      className={`group w-full overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)] ${
+        isSimilar ? "rounded-[24px]" : ""
+      }`}
+    >
       <div
-        className="relative aspect-[1.35/1] overflow-hidden bg-neutral-100 cursor-pointer
-    "
+        className={`relative cursor-pointer overflow-hidden bg-neutral-100 ${
+          isSimilar ? "aspect-[1.45/1]" : "aspect-[1.35/1]"
+        }`}
         onClick={() => navigate(`/properties/${propertyId}`)}
       >
         {propertyImages.length > 0 ? (
@@ -87,10 +93,16 @@ export default function HomeCard({
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/5" />
 
         {verified && (
-          <div className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-[#1b3b2b] shadow-sm backdrop-blur-md">
+          <div
+            className={`absolute left-4 top-4 flex items-center gap-1.5 rounded-full bg-white/95 font-semibold text-[#1b3b2b] shadow-sm backdrop-blur-md ${
+              isSimilar
+                ? "px-3.5 py-1.5 text-[11px]"
+                : "px-3 py-1.5 text-[11px]"
+            }`}
+          >
             <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2} />
 
-            <span> Verified owner </span>
+            <span>Verified owner</span>
           </div>
         )}
 
@@ -102,7 +114,6 @@ export default function HomeCard({
             e.stopPropagation();
 
             if (!isAuthenticated) {
-              console.log("navigating");
               navigate("/auth");
               return;
             }
@@ -113,7 +124,9 @@ export default function HomeCard({
               saveProperty({ userId, propertyId });
             }
           }}
-          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-white"
+          className={`absolute right-4 top-4 flex items-center justify-center rounded-full bg-white/95 text-neutral-800 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-105 hover:bg-white ${
+            isSimilar ? "h-11 w-11" : "h-10 w-10"
+          }`}
         >
           <Heart
             className={`h-[18px] w-[18px] ${isSaved ? "text-pink-500" : ""}`}
@@ -168,10 +181,14 @@ export default function HomeCard({
         )}
       </div>
 
-      <div className="px-5 pb-5 pt-4.5">
+      <div className={`${isSimilar ? "px-5 pb-6 pt-5" : "px-5 pb-5 pt-4.5"}`}>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-[19px] font-semibold tracking-[-0.02em] text-neutral-950">
+            <p
+              className={`font-semibold tracking-[-0.02em] text-neutral-950 ${
+                isSimilar ? "text-xl" : "text-[19px]"
+              }`}
+            >
               {formatCurrency(price)}
 
               {period && (
@@ -187,7 +204,11 @@ export default function HomeCard({
           </span>
         </div>
 
-        <h3 className="mt-2.5 truncate text-[15px] font-semibold tracking-[-0.01em] text-neutral-900">
+        <h3
+          className={`mt-2.5 truncate font-semibold tracking-[-0.01em] text-neutral-900 ${
+            isSimilar ? "text-[16px]" : "text-[15px]"
+          }`}
+        >
           {title}
         </h3>
 

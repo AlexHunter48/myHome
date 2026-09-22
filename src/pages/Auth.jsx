@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-  Home,
   LoaderCircle,
   LockKeyhole,
   Mail,
@@ -19,8 +18,10 @@ import useLogIn from "../features/auth/useLogin";
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { signUp, isPending } = useSignUp();
-  const { logIn } = useLogIn();
+  const { signUp, isPending: signingUp } = useSignUp();
+  const { logIn, isPending: loggingIn } = useLogIn();
+
+  const isLoading = signingUp || loggingIn;
 
   const navigate = useNavigate();
 
@@ -32,6 +33,7 @@ export default function Auth() {
   } = useForm();
 
   function onSubmit(data) {
+    if (isLoading) return;
     if (isSignUp) {
       signUp(
         {
@@ -307,10 +309,10 @@ export default function Auth() {
 
               <button
                 type="submit"
-                disabled={isPending}
+                disabled={isLoading}
                 className="group flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#1b3b2b] text-sm font-semibold text-white shadow-sm transition hover:bg-[#142e21] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isPending ? (
+                {isLoading ? (
                   <LoaderCircle size={18} className="animate-spin" />
                 ) : (
                   <>
