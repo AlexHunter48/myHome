@@ -10,6 +10,7 @@ import useGetMyPropertyCounts from "../features/properties/useGetMyPropertyCount
 import ListingLoader from "../components/ui/ListingLoader";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import useGetTotalViewCount from "../features/listings/useGetTotalViewCount";
 export default function MyListings() {
   const [isActive, setIsActive] = useState("published");
   const [page, setPage] = useState(1);
@@ -47,6 +48,12 @@ export default function MyListings() {
   } = useGetMyPropertyCounts({
     id: user?.id,
   });
+
+  const {
+    totalViews,
+    isPending: gettingTotalCount,
+    error: totalCountError,
+  } = useGetTotalViewCount();
 
   useEffect(() => {
     if (error) {
@@ -169,7 +176,7 @@ export default function MyListings() {
 
               <div className="text-right">
                 <span className="block text-xl font-semibold tracking-tight text-[var(--color-text)]">
-                  1.2k
+                  {gettingTotalCount ? ".." : totalViews}
                 </span>
 
                 <p className="mt-0.5 text-xs text-[var(--color-text-secondary)] sm:text-sm">

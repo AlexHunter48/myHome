@@ -538,3 +538,28 @@ export async function recordPropertyView({ propertyId, visitorId }) {
     throw new Error(error.message);
   }
 }
+
+export async function claimVisitorPropertyViews({ visitorId, userId }) {
+  const { error } = await supabase.rpc("claim_visitor_property_views", {
+    visitor_id: visitorId,
+    user_id: userId,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function getTotalViewCount() {
+  const { data, error } = await supabase.from("properties").select("views");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const views = data.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.views;
+  }, 0);
+
+  return views;
+}
