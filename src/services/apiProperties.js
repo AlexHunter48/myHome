@@ -563,3 +563,16 @@ export async function getTotalViewCount() {
 
   return views;
 }
+
+export async function getPropertyEnquiries({ propertyId }) {
+  const { count, error } = await supabase
+    .from("conversations")
+    .select("*", { count: "exact" })
+    .eq("property_id", propertyId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return count;
+}

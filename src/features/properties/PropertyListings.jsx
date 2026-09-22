@@ -16,6 +16,8 @@ import {
 
 import { formatCurrency } from "../../utils/formatCurrency";
 import { useNavigate } from "react-router-dom";
+import useGetPropertyEnquiries from "../listings/useGetPropertyEnquiries";
+import PropertyStats from "./PropertyStats";
 
 export default function PropertyListings({ featuredHomes, isActive }) {
   const navigate = useNavigate();
@@ -136,17 +138,7 @@ export default function PropertyListings({ featuredHomes, isActive }) {
               </div>
 
               <div className="hidden flex-col justify-between border-l border-neutral-200/70 p-6 lg:flex">
-                <div className="flex items-center gap-5 text-[var(--color-text-secondary)]">
-                  <span className="flex items-center gap-1.5 whitespace-nowrap">
-                    <Eye size={16} strokeWidth={1.8} />
-                    <span className="text-sm">245 views</span>
-                  </span>
-
-                  <span className="flex items-center gap-1.5 whitespace-nowrap">
-                    <MessageCircleCheck size={16} strokeWidth={1.8} />
-                    <span className="text-sm">12 enquiries</span>
-                  </span>
-                </div>
+                <PropertyStats key={property.id} property={property} />
 
                 <div className="flex flex-col gap-3">
                   <button
