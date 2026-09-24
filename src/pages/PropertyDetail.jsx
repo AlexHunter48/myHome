@@ -112,7 +112,6 @@ export default function PropertyDetail() {
     <>
       <main className="min-h-screen bg-[var(--color-background)] pt-8 sm:pt-10">
         <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-10">
-          {/* Top navigation */}
           <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <button
@@ -161,7 +160,6 @@ export default function PropertyDetail() {
             </div>
           </div>
 
-          {/* Gallery */}
           <section className="relative overflow-hidden rounded-[28px] sm:rounded-[34px]">
             <div
               className={`grid h-[420px] gap-2 sm:h-[520px] ${
@@ -265,7 +263,6 @@ export default function PropertyDetail() {
             </div>
           </section>
 
-          {/* Gallery modal */}
           {isGalleryOpen && (
             <div className="fixed inset-0 z-[100] bg-black/95 text-white">
               <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-5 py-5 sm:px-8">
@@ -348,10 +345,8 @@ export default function PropertyDetail() {
             </div>
           )}
 
-          {/* PROPERTY DETAILS */}
           <div className="mt-7 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-14">
             <div className="min-w-0">
-              {/* Header */}
               <div className="border-b border-neutral-200 pb-7">
                 <div className="mb-4 flex flex-wrap items-center gap-2">
                   <span className="rounded-full bg-[#EAF0EC] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1b3b2b]">
@@ -395,7 +390,6 @@ export default function PropertyDetail() {
                 </div>
               </div>
 
-              {/* Property stats */}
               <div className="grid grid-cols-3 border-b border-neutral-200 py-6 sm:py-7">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b]">

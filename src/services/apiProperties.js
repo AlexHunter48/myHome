@@ -576,3 +576,25 @@ export async function getPropertyEnquiries({ propertyId }) {
 
   return count;
 }
+
+export async function getOwnerDetails({ conversationId }) {
+  const { data, error } = await supabase
+    .from("conversations")
+    .select(
+      `
+      owner_id,
+      owner:profiles!conversations_owner_id_fkey (
+        name,
+        avatar_url
+      )
+    `,
+    )
+    .eq("id", conversationId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}

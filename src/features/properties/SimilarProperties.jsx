@@ -6,7 +6,7 @@ export default function SimilarProperties({ neighbourhood }) {
     location: neighbourhood,
   });
 
-  if (isPending || error || !properties?.length) return null;
+  if (isPending || error || !properties?.length || !neighbourhood) return null;
 
   return (
     <section>
