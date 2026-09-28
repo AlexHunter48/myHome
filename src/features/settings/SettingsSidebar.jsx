@@ -101,13 +101,12 @@ export default function SettingsSidebar() {
 
   return (
     <aside className="min-h-full w-full bg-white px-6 py-8">
-      {/* Profile */}
       <div className="flex items-center gap-3 border-b border-neutral-200/70 pb-8">
         {profile?.avatar_url ? (
           <img
             src={profile.avatar_url}
             alt={profile?.name || "Profile"}
-            className="h-12 w-12 shrink-0 rounded-full object-cover"
+            className="h-12 w-12 shrink-0 rounded-full object-cover object-[center_35%]"
           />
         ) : (
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E8ECE7] font-semibold text-[#1B3B2B]">
@@ -129,7 +128,6 @@ export default function SettingsSidebar() {
         </div>
       </div>
 
-      {/* Navigation */}
       <div className="space-y-7 pt-8">
         {navlinks.map((navlink) => (
           <section key={navlink.title}>
@@ -147,7 +145,7 @@ export default function SettingsSidebar() {
                       className={({ isActive }) =>
                         `group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[14px] transition-colors duration-200 ${
                           isActive
-                            ? "bg-[#F1F4F0] font-medium text-[#1B3B2B]"
+                            ? "bg-[var(--color-primary)] font-medium text-[#ffff]"
                             : "text-neutral-600 hover:bg-[#F7F7F5] hover:text-neutral-900"
                         }`
                       }
@@ -157,7 +155,7 @@ export default function SettingsSidebar() {
                           <span
                             className={`shrink-0 transition-colors ${
                               isActive
-                                ? "text-[#1B3B2B]"
+                                ? "text-[#ffff]"
                                 : "text-neutral-400 group-hover:text-neutral-600"
                             }`}
                           >
@@ -176,7 +174,6 @@ export default function SettingsSidebar() {
         ))}
       </div>
 
-      {/* Log out */}
       <div className="mt-8 border-t border-neutral-200/70 pt-5">
         <button
           type="button"

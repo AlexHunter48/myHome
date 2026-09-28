@@ -12,7 +12,7 @@ export default function LoginSecurity() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-full bg-[var(--color-background)] px-8 py-12 lg:px-12">
+    <div className="min-h-full bg-[var(--color-background)] px-8 py-10 ">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
           <h1 className="text-4xl font-semibold tracking-[-0.035em] text-[#17221D]">

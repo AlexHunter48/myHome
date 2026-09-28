@@ -27,3 +27,16 @@ export async function updateProfileRole({ userId }) {
 
   return data;
 }
+
+export async function updateProfile({ userId, name }) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ name })
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}

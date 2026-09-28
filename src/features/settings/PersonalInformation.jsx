@@ -1,12 +1,72 @@
 import { Camera, LockKeyhole, MapPin } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useUploadAvatar } from "../../profiles/useUploadAvatar";
+import { useEffect, useRef, useState } from "react";
+import { useUpdateProfile } from "../../profiles/useUploadProfile";
+import toast from "react-hot-toast";
 export default function PersonalInformation() {
   const { profile, user } = useAuth();
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [userName, setUserName] = useState("");
+
+  const photoRef = useRef(null);
+  console.log("PROFILE_NAME", profile?.name);
+  console.log("USERNAME", userName);
+
+  useEffect(() => {
+    if (profile?.name) {
+      setUserName(profile.name);
+    }
+  }, [profile?.name]);
+  const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } =
+    useUploadAvatar();
+  const { mutateAsync: updateProfile, isPending: isUpdatingProfile } =
+    useUpdateProfile();
+
+  function handleAvatarChange(e) {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    setSelectedAvatar(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  }
+
+  const isLoading = isUpdatingProfile || isUploadingAvatar;
+  async function upload() {
+    if (isLoading) return;
+
+    const nameChanged = profile?.name !== userName;
+
+    if (!nameChanged && !selectedAvatar) {
+      return;
+    }
+
+    try {
+      if (nameChanged) {
+        await updateProfile({
+          userId: profile?.id,
+          name: userName,
+        });
+      }
+
+      if (selectedAvatar) {
+        await uploadAvatar({
+          userId: profile?.id,
+          file: selectedAvatar,
+        });
+      }
+
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to update profile");
+    }
+  }
 
   return (
-    <div className="min-h-full bg-[var(--color-background)] px-8 py-12 lg:px-12">
+    <div className="min-h-full bg-[var(--color-background)] px-8 py-10">
       <div className="mx-auto max-w-6xl">
-        {/* Page heading */}
         <div className="mb-8">
           <h1 className="text-4xl font-semibold tracking-[-0.035em] text-[#17221D]">
             Settings
@@ -17,9 +77,7 @@ export default function PersonalInformation() {
           </p>
         </div>
 
-        {/* Personal information */}
         <section className="overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white">
-          {/* Section heading */}
           <div className="flex items-start justify-between px-8 pt-8">
             <div>
               <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-[#17221D]">
@@ -32,24 +90,23 @@ export default function PersonalInformation() {
               </p>
             </div>
 
-            <button
+            {/* <button
               type="button"
               className="hidden items-center gap-2 rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-800 transition hover:bg-neutral-50 sm:flex"
             >
               <Camera size={17} />
               Change photo
-            </button>
+            </button> */}
           </div>
 
           <div className="px-8 pb-8">
-            {/* Profile photo */}
             <div className="mt-7 flex items-center gap-5">
               <div className="relative">
-                {profile?.avatar_url ? (
+                {profile?.avatar_url || avatarPreview ? (
                   <img
-                    src={profile.avatar_url}
+                    src={avatarPreview || profile.avatar_url}
                     alt={profile?.name || "Profile"}
-                    className="h-20 w-20 rounded-full object-cover"
+                    className="h-20 w-20 rounded-full object-cover object-[center_35%] "
                   />
                 ) : (
                   <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#E9EEE9] text-xl font-semibold text-[#1B3B2B]">
@@ -57,8 +114,16 @@ export default function PersonalInformation() {
                   </div>
                 )}
 
+                <input
+                  type="file"
+                  ref={photoRef}
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
                 <button
                   type="button"
+                  onClick={() => photoRef.current?.click()}
                   aria-label="Change profile photo"
                   className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-white text-neutral-700 shadow-sm transition hover:bg-neutral-50"
                 >
@@ -77,9 +142,7 @@ export default function PersonalInformation() {
               </div>
             </div>
 
-            {/* Form */}
             <div className="mt-8 grid grid-cols-1 gap-x-7 gap-y-6 md:grid-cols-2">
-              {/* Full name */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-900">
                   Full name
@@ -87,13 +150,14 @@ export default function PersonalInformation() {
 
                 <input
                   type="text"
+                  value={userName}
                   defaultValue={profile?.name || ""}
+                  onChange={(e) => setUserName(e.target.value)}
                   placeholder="Your full name"
                   className="h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-[15px] text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-[#1B3B2B] focus:ring-2 focus:ring-[#1B3B2B]/10"
                 />
               </div>
 
-              {/* Email */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-900">
                   Email address
@@ -114,8 +178,7 @@ export default function PersonalInformation() {
                 </div>
               </div>
 
-              {/* Phone */}
-              <div>
+              {/* <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-900">
                   Phone number
                 </label>
@@ -125,10 +188,9 @@ export default function PersonalInformation() {
                   placeholder="+234 801 234 5678"
                   className="h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-[15px] text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-[#1B3B2B] focus:ring-2 focus:ring-[#1B3B2B]/10"
                 />
-              </div>
+              </div> */}
 
-              {/* Location */}
-              <div>
+              {/* <div>
                 <label className="mb-2 block text-sm font-medium text-neutral-900">
                   Location
                 </label>
@@ -145,10 +207,9 @@ export default function PersonalInformation() {
                     className="h-12 w-full rounded-xl border border-neutral-300 bg-white pl-11 pr-4 text-[15px] text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-[#1B3B2B] focus:ring-2 focus:ring-[#1B3B2B]/10"
                   />
                 </div>
-              </div>
+              </div> */}
 
-              {/* Bio */}
-              <div className="md:col-span-2">
+              {/* <div className="md:col-span-2">
                 <div className="flex items-center justify-between">
                   <label className="mb-2 block text-sm font-medium text-neutral-900">
                     Bio{" "}
@@ -166,11 +227,10 @@ export default function PersonalInformation() {
                   placeholder="Tell people a little about yourself..."
                   className="w-full resize-none rounded-xl border border-neutral-300 bg-white px-4 py-3 text-[15px] leading-6 text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-[#1B3B2B] focus:ring-2 focus:ring-[#1B3B2B]/10"
                 />
-              </div>
+              </div> */}
             </div>
 
-            {/* Actions */}
-            <div className="mt-7 flex justify-end gap-3 border-t border-neutral-200 pt-6">
+            <div className="mt-7 flex justify-end gap-3 pt-6">
               <button
                 type="button"
                 className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
@@ -180,15 +240,16 @@ export default function PersonalInformation() {
 
               <button
                 type="button"
-                className="rounded-xl bg-[#1B3B2B] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#143021]"
+                onClick={upload}
+                disabled={isLoading}
+                className="rounded-xl bg-[var(--color-primary)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-primary-hover)]"
               >
-                Save changes
+                {isLoading ? "Saving" : "Save changes"}
               </button>
             </div>
           </div>
         </section>
 
-        {/* Profile visibility */}
         <section className="mt-6 rounded-[22px] border border-neutral-200/80 bg-white px-8 py-8">
           <div>
             <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-[#17221D]">
@@ -211,7 +272,6 @@ export default function PersonalInformation() {
               </p>
             </div>
 
-            {/* Toggle */}
             <button
               type="button"
               role="switch"

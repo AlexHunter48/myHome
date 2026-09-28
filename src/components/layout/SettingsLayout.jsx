@@ -35,7 +35,7 @@ export default function SettingsLayout() {
               <MobileSettingsMenu />
             ) : (
               <>
-                <div className="flex items-center border-b border-neutral-200 px-5 py-3">
+                <div className="flex items-center  px-5 py-3">
                   <button
                     type="button"
                     onClick={() => navigate(-1)}
