@@ -598,3 +598,17 @@ export async function getOwnerDetails({ conversationId }) {
 
   return data;
 }
+
+export async function getOwnerDetailsById({ ownerId }) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("name, avatar_url")
+    .eq("id", ownerId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}

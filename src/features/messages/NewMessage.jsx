@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import useProperty from "../properties/useProperty";
 import useCreateConversation from "./useCreateConversation";
 import useSendMessage from "./useSendMessages";
-
+import useGetOwnerDetailsById from "../listings/useGetOwnerDetailsById";
 export default function NewMessage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -16,6 +16,14 @@ export default function NewMessage() {
   const { user } = useAuth();
 
   const { property, isPending: loadingProperty } = useProperty(propertyId);
+
+  const {
+    ownerDetails,
+    isPending: loadingOwner,
+    error: ownerError,
+  } = useGetOwnerDetailsById({
+    ownerId: property?.owner_id,
+  });
 
   const { createConversation, isPending: creatingConversation } =
     useCreateConversation();
@@ -56,6 +64,7 @@ export default function NewMessage() {
       <div className="min-h-screen bg-[#f7f5f0]">
         <div className="mx-auto max-w-2xl px-5 py-10">
           <div className="h-5 w-32 animate-pulse rounded bg-neutral-200" />
+
           <div className="mt-8 h-32 animate-pulse rounded-3xl bg-white" />
         </div>
       </div>
@@ -87,6 +96,7 @@ export default function NewMessage() {
       <header className="border-b border-neutral-200/80 bg-white">
         <div className="mx-auto flex h-[72px] max-w-2xl items-center gap-4 px-5 sm:px-6">
           <button
+            type="button"
             onClick={() => navigate(-1)}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-neutral-700 transition hover:bg-neutral-100"
             aria-label="Go back"
@@ -119,6 +129,52 @@ export default function NewMessage() {
           <p className="mt-1 text-sm text-neutral-500">
             {property.neighbourhood || property.city || property.location}
           </p>
+
+          <div className="mt-5 flex items-center gap-3 border-t border-neutral-100 pt-5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#eaf0ec]">
+              {loadingOwner ? (
+                <div className="h-full w-full animate-pulse bg-neutral-200" />
+              ) : ownerDetails?.avatar_url ? (
+                <img
+                  src={ownerDetails.avatar_url}
+                  alt={ownerDetails.name || "Property owner"}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-semibold text-[#1b3b2b]">
+                  {ownerDetails?.name?.charAt(0)?.toUpperCase() || "O"}
+                </span>
+              )}
+            </div>
+
+            <div className="min-w-0">
+              {loadingOwner ? (
+                <>
+                  <div className="h-4 w-28 animate-pulse rounded bg-neutral-200" />
+
+                  <div className="mt-1.5 h-3 w-20 animate-pulse rounded bg-neutral-100" />
+                </>
+              ) : ownerError ? (
+                <>
+                  <p className="text-sm font-semibold text-neutral-900">
+                    Property owner
+                  </p>
+
+                  <p className="mt-0.5 text-xs text-neutral-500">Owner</p>
+                </>
+              ) : (
+                <>
+                  <p className="truncate text-sm font-semibold text-neutral-900">
+                    {ownerDetails?.name || "Property owner"}
+                  </p>
+
+                  <p className="mt-0.5 text-xs text-neutral-500">
+                    Property owner
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
         </div>
 
         <form onSubmit={handleSendMessage} className="mt-8">
@@ -152,7 +208,7 @@ export default function NewMessage() {
                 disabled={isSending || !message.trim()}
                 className="flex shrink-0 items-center gap-2 rounded-xl bg-[#1b3b2b] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#163225] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <span> {isSending ? "Sending..." : "Send"} </span>
+                <span>{isSending ? "Sending..." : "Send"}</span>
 
                 {!isSending && <Send size={15} strokeWidth={1.8} />}
               </button>

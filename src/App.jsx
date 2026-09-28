@@ -22,6 +22,11 @@ import ListingLayout from "./components/layout/ListingLayout";
 import EditListings from "./features/listings/EditListings";
 import EditPhotos from "./features/listings/EditPhotos";
 import ManageListing from "./features/listings/ManageListing";
+import SettingsLayout from "./components/layout/SettingsLayout";
+import PersonalInformation from "./features/settings/PersonalInformation";
+import LoginSecurity from "./features/settings/LoginSecurity";
+import Notifications from "./features/settings/Notifications";
+import Preferences from "./features/settings/Preferences";
 
 const queryClient = new QueryClient();
 
@@ -97,6 +102,13 @@ export default function App() {
                   </ProtectedOwnerRoute>
                 }
               />
+            </Route>
+            <Route path="/settings" element={<SettingsLayout />}>
+              <Route index element={<PersonalInformation />} />
+              <Route path="personal" element={<PersonalInformation />} />
+              <Route path="login-security" element={<LoginSecurity />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="preferences" element={<Preferences />} />
             </Route>
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<PageNotFound />} />
