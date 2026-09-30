@@ -11,8 +11,6 @@ export default function PersonalInformation() {
   const [userName, setUserName] = useState("");
 
   const photoRef = useRef(null);
-  console.log("PROFILE_NAME", profile?.name);
-  console.log("USERNAME", userName);
 
   useEffect(() => {
     if (profile?.name) {
@@ -233,7 +231,12 @@ export default function PersonalInformation() {
             <div className="mt-7 flex justify-end gap-3 pt-6">
               <button
                 type="button"
-                className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
+                onClick={() => {
+                  setAvatarPreview(null);
+                  setSelectedAvatar(null);
+                  setUserName(profile?.name);
+                }}
+                className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium   text-neutral-700 transition hover:bg-neutral-50"
               >
                 Discard changes
               </button>
@@ -242,7 +245,7 @@ export default function PersonalInformation() {
                 type="button"
                 onClick={upload}
                 disabled={isLoading}
-                className="rounded-xl bg-[var(--color-primary)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-primary-hover)]"
+                className="rounded-xl   bg-[var(--color-primary)]  px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-primary-hover)]"
               >
                 {isLoading ? "Saving" : "Save changes"}
               </button>

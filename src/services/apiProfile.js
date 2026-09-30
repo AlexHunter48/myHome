@@ -40,3 +40,51 @@ export async function updateProfile({ userId, name }) {
 
   return data;
 }
+
+export async function changeEmail({ newEmail }) {
+  const email = newEmail.trim();
+
+  if (!email) {
+    throw new Error("Please enter your new email address.");
+  }
+
+  const { data, error } = await supabase.auth.updateUser(
+    {
+      email,
+    },
+    {
+      emailRedirectTo: "http://localhost:5173/settings/login-security",
+    },
+  );
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function changePasswordApi({
+  email,
+  currentPassword,
+  newPassword,
+}) {
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password: currentPassword,
+  });
+
+  if (signInError) {
+    throw new Error("Your current password is incorrect.");
+  }
+
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}

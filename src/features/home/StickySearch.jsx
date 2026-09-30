@@ -8,7 +8,7 @@ import {
   Heart,
   Navigation,
 } from "lucide-react";
-import { Link, Links, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import myhome from "../../assets/myhome-logo-exact.svg";
 import Modal from "../../components/ui/Modal";
 import { useState } from "react";
@@ -16,7 +16,7 @@ import MenuContent from "../../components/ui/MenuContent";
 import { useAuth } from "../../context/AuthContext";
 import formatPriceInput from "../../utils/formatInputCurrency";
 
-export default function StickySearch({ location, setLocation }) {
+export default function StickySearch() {
   const [whereQuery, setWhereQuery] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -361,21 +361,36 @@ export default function StickySearch({ location, setLocation }) {
             >
               List your property
             </button>
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={profile?.name || "Profile"}
+                className="h-9 w-9 rounded-full object-cover object-[center_30%] "
+              />
+            ) : isAuthenticated && !profile?.avatar_url ? (
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E9EEE9] text-xl font-semibold text-[#1B3B2B]">
+                {profile?.name?.charAt(0)?.toUpperCase() || "U"}
+              </div>
+            ) : (
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E9EEE9] text-xl font-semibold text-[#1B3B2B]">
+                <CircleUserRound size={18} strokeWidth={1.8} />
+              </div>
+            )}
             <Link
               to="/properties/favourites"
               aria-label="Saved properties"
               className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-neutral-100 hover:text-[var(--color-primary)]"
             >
-              <Heart size={18} strokeWidth={1.8} />
+              <Heart size={21} strokeWidth={1.8} />
             </Link>
 
-            <Link
+            {/* <Link
               to="#"
               aria-label="Account"
               className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-neutral-100 hover:text-[var(--color-primary)]"
             >
               <CircleUserRound size={18} strokeWidth={1.8} />
-            </Link>
+            </Link> */}
 
             <Modal.Open opens="menu" toggle>
               <button>

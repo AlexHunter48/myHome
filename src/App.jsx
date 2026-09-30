@@ -103,7 +103,14 @@ export default function App() {
                 }
               />
             </Route>
-            <Route path="/settings" element={<SettingsLayout />}>
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<PersonalInformation />} />
               <Route path="personal" element={<PersonalInformation />} />
               <Route path="login-security" element={<LoginSecurity />} />

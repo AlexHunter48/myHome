@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { signup as signUpApi } from "../../services/apiAuth";
+import { signUpApi } from "../../services/apiAuth";
 import toast from "react-hot-toast";
 
 export default function useSignUp() {

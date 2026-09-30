@@ -1,18 +1,23 @@
 import supabase from "./supabase";
 
-export async function signup({ fullName, email, password }) {
+export async function signUpApi({ name, email, password }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        name: fullName,
-        avatar_url: "",
+        name,
       },
     },
   });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (data.user?.identities?.length === 0) {
+    throw new Error("An account with this email already exists.");
+  }
 
   return data;
 }

@@ -7,9 +7,14 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import ChangeEmailModal from "../../components/ui/ChangeEmailModal";
+import ChangePasswordModal from "../../components/ui/ChangepasswordModal";
 
 export default function LoginSecurity() {
   const { user } = useAuth();
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   return (
     <div className="min-h-full bg-[var(--color-background)] px-8 py-10 ">
@@ -57,7 +62,8 @@ export default function LoginSecurity() {
 
               <button
                 type="button"
-                className="text-sm font-medium text-[#1B3B2B] transition hover:text-[#143021]"
+                onClick={() => setShowEmailModal(true)}
+                className="text-sm font-medium text-[#1B3B2B] transition hover:text-[#123D24]"
               >
                 Change
               </button>
@@ -80,6 +86,7 @@ export default function LoginSecurity() {
 
               <button
                 type="button"
+                onClick={() => setShowPasswordModal(true)}
                 className="text-sm font-medium text-[#1B3B2B] transition hover:text-[#143021]"
               >
                 Change
@@ -88,7 +95,6 @@ export default function LoginSecurity() {
           </div>
         </section>
 
-        {/* Two-factor authentication */}
         <section className="mt-6 overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white">
           <div className="px-8 pt-8">
             <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-[#17221D]">
@@ -211,6 +217,16 @@ export default function LoginSecurity() {
             >
               Sign out all
             </button>
+
+            <ChangeEmailModal
+              isOpen={showEmailModal}
+              onClose={() => setShowEmailModal(false)}
+              currentEmail={user?.email}
+            />
+            <ChangePasswordModal
+              isOpen={showPasswordModal}
+              onClose={() => setShowPasswordModal(false)}
+            />
           </div>
         </section>
       </div>
