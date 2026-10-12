@@ -105,7 +105,7 @@ export default function EditPhotos() {
 
   if (isPending) {
     return (
-      <main className="min-h-screen bg-[var(--color-background)] px-6 pb-16 pt-28">
+      <main className="min-h-screen bg-[var(--color-background)] px-6 pb-16 pt-16">
         <div className="mx-auto max-w-6xl animate-pulse">
           <div className="h-4 w-16 rounded bg-neutral-200" />
 

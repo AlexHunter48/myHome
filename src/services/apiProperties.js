@@ -612,3 +612,39 @@ export async function getOwnerDetailsById({ ownerId }) {
 
   return data;
 }
+
+export async function unPublishProperty({ propertyId }) {
+  console.log("Property ID:", propertyId);
+
+  const { data, error } = await supabase
+    .from("properties")
+    .update({ status: "draft" })
+    .eq("id", propertyId)
+    .select()
+    .single();
+
+  console.log("Updated property:", data);
+  console.log("Supabase error:", error);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function deleteProperty({ propertyId }) {
+  const { data, error } = await supabase
+    .from("properties")
+    .delete()
+    .eq("id", propertyId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Property could not be deleted");
+  }
+
+  return data;
+}

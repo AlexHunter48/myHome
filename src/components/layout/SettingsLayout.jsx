@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import SettingsSidebar from "../../features/settings/SettingsSidebar";
 import logo from "../../assets/myhome-logo-exact.svg";
 import MobileSettingsMenu from "../../features/settings/MobileSettingsMenu";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, House } from "lucide-react";
 
 export default function SettingsLayout() {
   const location = useLocation();
@@ -13,10 +13,18 @@ export default function SettingsLayout() {
   return (
     <div className="h-dvh flex flex-col overflow-hidden bg-[var(--color-background)]">
       <header className="h-20 shrink-0 border-b border-neutral-200 bg-stone-50">
-        <div className="flex h-full items-center px-5 sm:px-8">
+        <div className="flex h-full justify-between items-center px-5 sm:px-8">
           <Link to="/properties">
             <img src={logo} alt="MyHome" className="h-8 w-auto" />
           </Link>
+          <button
+            type="button"
+            onClick={() => navigate("/properties")}
+            className="flex items-center gap-2 rounded-full bg-[#E9EEE9] px-4 py-2 text-sm font-semibold text-[#1B3B2B] transition-colors hover:bg-[#DDE6DD]"
+          >
+            <House size={15} strokeWidth={2} />
+            Home
+          </button>
         </div>
       </header>
 

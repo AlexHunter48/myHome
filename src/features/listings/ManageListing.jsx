@@ -16,12 +16,23 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import useGetProperty from "../properties/useGetProperty";
 import { formatCurrency } from "../../utils/formatCurrency";
+import ConfirmModal from "../../components/ui/ConfirmModal";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import usePublishProperty from "../properties/usePublishProperty";
+import useUnPublishProperty from "../properties/useUnpublishProperty";
 
 export default function ManageListing() {
+  const [showStatusModal, setShowStatusModal] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { property, isPending: isLoading, error } = useGetProperty(id);
+  const { publish, isPending: isPublishing } = usePublishProperty();
+  const { unPublishing, isPending } = useUnPublishProperty();
+
+  const isPublished = property?.status === "published";
+  const isActionPending = isPublishing || isPending;
 
   if (isLoading) {
     return (
@@ -190,7 +201,7 @@ export default function ManageListing() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-1">
             <div className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EAF0EC] text-[#1b3b2b]">
@@ -292,33 +303,102 @@ export default function ManageListing() {
                 className="-rotate-90 text-neutral-400"
               />
             </button>
+            {isPublished ? (
+              <button
+                type="button"
+                onClick={() => setShowStatusModal(true)}
+                className="flex w-full items-center justify-between border-b border-neutral-200/70 p-5 text-left transition hover:bg-neutral-50"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
+                    <EyeDashed size={18} strokeWidth={1.8} />
+                  </div>
 
-            <button
-              type="button"
-              className="flex w-full items-center justify-between border-b border-neutral-200/70 p-5 text-left transition hover:bg-neutral-50"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
-                  <EyeDashed size={18} strokeWidth={1.8} />
+                  <div>
+                    <p className="text-sm font-medium text-neutral-900">
+                      Unpublish
+                    </p>
+
+                    <p className="mt-0.5 text-xs text-neutral-500">
+                      Remove this listing from the marketplace
+                    </p>
+                  </div>
                 </div>
 
-                <div>
-                  <p className="text-sm font-medium text-neutral-900">
-                    Unpublish
-                  </p>
+                <ChevronDown
+                  size={18}
+                  strokeWidth={1.7}
+                  className="-rotate-90 text-neutral-400"
+                />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowStatusModal(true)}
+                className="flex w-full items-center justify-between border-b border-neutral-200/70 p-5 text-left transition hover:bg-neutral-50"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
+                    <EyeDashed size={18} strokeWidth={1.8} />
+                  </div>
 
-                  <p className="mt-0.5 text-xs text-neutral-500">
-                    Remove this listing from the marketplace
-                  </p>
+                  <div>
+                    <p className="text-sm font-medium text-neutral-900">
+                      Publish
+                    </p>
+
+                    <p className="mt-0.5 text-xs text-neutral-500">
+                      Add this listing to the marketplace
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <ChevronDown
-                size={18}
-                strokeWidth={1.7}
-                className="-rotate-90 text-neutral-400"
-              />
-            </button>
+                <ChevronDown
+                  size={18}
+                  strokeWidth={1.7}
+                  className="-rotate-90 text-neutral-400"
+                />
+              </button>
+            )}
+
+            <ConfirmModal
+              isOpen={showStatusModal}
+              onClose={() => setShowStatusModal(false)}
+              onConfirm={() => {
+                if (isPublished) {
+                  unPublishing(
+                    { propertyId: property.id },
+                    {
+                      onSuccess: () => setShowStatusModal(false),
+                    },
+                  );
+                } else {
+                  if (!property.image) {
+                    toast.error("Property must have at least one image");
+                    return;
+                  }
+
+                  publish(property.id, {
+                    onSuccess: () => setShowStatusModal(false),
+                  });
+                }
+              }}
+              title={
+                isPublished
+                  ? "Unpublish this property?"
+                  : "Publish this property?"
+              }
+              description={
+                isPublished
+                  ? "This property will no longer appear in public listings. Your property details and images will remain saved, and you can publish it again whenever you're ready."
+                  : "Your property will become visible to potential buyers and renters on MyHome. Make sure your listing details and images are ready before publishing."
+              }
+              confirmText={
+                isPublished ? "Unpublish property" : "Publish property"
+              }
+              variant={isPublished ? "warning" : "warning"}
+              isPending={isActionPending}
+            />
 
             <button
               type="button"

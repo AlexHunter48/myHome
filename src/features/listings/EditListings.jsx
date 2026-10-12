@@ -133,7 +133,7 @@ export default function EditListings() {
   const isSaving = isUpdating || isUpdatingCoordinates;
 
   return (
-    <main className="min-h-screen bg-[var(--color-background)] px-4 pb-16 pt-28 sm:px-6 lg:px-10">
+    <main className="min-h-screen bg-[var(--color-background)] px-4 pb-16  pt-16 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-4xl">
         <div className="mb-10">
           <button

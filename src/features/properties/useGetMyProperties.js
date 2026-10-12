@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export default function useGetMyProperties({ id, page, pageSize, status }) {
   const { data, isPending, error } = useQuery({
-    queryKey: ["my-properties", id, page, pageSize],
+    queryKey: ["my-properties", id, page, pageSize, status],
     queryFn: () => getMyProperties({ id, page, pageSize, status }),
     enabled: !!id,
     onError: (error) => {

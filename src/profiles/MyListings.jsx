@@ -30,6 +30,7 @@ export default function MyListings() {
       : isActive === "drafts"
         ? "draft"
         : null;
+  console.log(status);
 
   const pageSize = 10;
   const { properties, isPending, error } = useGetMyProperties({
@@ -80,7 +81,7 @@ export default function MyListings() {
     <div className="relative overflow-hidden bg-[var(--color-background)]">
       <StickySearch />
 
-      <section className="relative isolate overflow-hidden">
+      <section className="relative isolate overflow-hidden mt-20">
         <img
           src={heroplant}
           alt=""
@@ -275,6 +276,7 @@ export default function MyListings() {
 
             <button
               type="button"
+              onClick={() => navigate("/properties/new")}
               className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1b3b2b] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#163225]"
             >
               <Plus size={17} strokeWidth={1.8} />

@@ -69,32 +69,26 @@ export default function SettingsSidebar() {
         },
       ],
     },
-    {
-      title: "For owners",
-      links: [
-        {
-          icon: <House size={18} />,
-          title: "Owner profile",
-          to: "/owner",
-        },
-        {
-          icon: <FileText size={18} />,
-          title: "Listing preferences",
-          to: "/settings/listing-preferences",
-          end: true,
-        },
-      ],
-    },
-    {
-      title: "Support",
-      links: [
-        {
-          icon: <CircleHelp size={18} />,
-          title: "Help & support",
-          to: "/help",
-        },
-      ],
-    },
+    // {
+    //   // title: "For owners",
+    //   // links: [
+    //   //   {
+    //   //     icon: <House size={18} />,
+    //   //     title: "Owner profile",
+    //   //     to: "/owner",
+    //   //   },
+    //   // ],
+    // },
+    // {
+    //   title: "Support",
+    //   links: [
+    //     {
+    //       icon: <CircleHelp size={18} />,
+    //       title: "Help & support",
+    //       to: "/help",
+    //     },
+    //   ],
+    // },
   ];
 
   if (!isAuthenticated) return null;
