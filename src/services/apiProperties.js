@@ -42,6 +42,9 @@ export async function getProperties(filters = {}) {
   if (filters.location) {
     query = query.ilike("neighbourhood", `%${filters.location}%`);
   }
+  if (filters.listingState) {
+    query = query.eq("status", filters.listingState);
+  }
 
   const { data: properties, error } = await query;
 
@@ -64,7 +67,7 @@ export async function getProperties(filters = {}) {
       image: images[0] || "",
     };
   });
-  console.log(formattedProperties);
+
   return formattedProperties;
 }
 

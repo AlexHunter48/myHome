@@ -24,6 +24,8 @@ export default function Messages() {
     error: ownerError,
   } = useGetOwnerDetails({ conversationId });
 
+  console.log(ownerDetails);
+
   const { markAsRead } = useMarkMessagesAsRead();
 
   useEffect(() => {
@@ -71,8 +73,20 @@ export default function Messages() {
             <ArrowLeft size={19} strokeWidth={1.8} />
           </button>
 
-          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-neutral-100">
-            {/* Avatar will go here */}
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#eaf0ec]">
+            {loadingOwner ? (
+              <div className="h-full w-full animate-pulse bg-neutral-200" />
+            ) : ownerDetails?.owner?.avatar_url ? (
+              <img
+                src={ownerDetails.owner.avatar_url}
+                alt={ownerDetails.owner.name || "Property owner"}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="text-sm font-semibold text-[#1b3b2b]">
+                {ownerDetails?.name?.charAt(0)?.toUpperCase() || "O"}
+              </span>
+            )}
           </div>
 
           <div className="min-w-0">

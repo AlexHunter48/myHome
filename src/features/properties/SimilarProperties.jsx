@@ -1,28 +1,37 @@
-import { ArrowRight } from "lucide-react";
-import PropertySection from "./PropertySection";
+import { ArrowRight, Sparkles } from "lucide-react";
+
 import useProperties from "./useProperties";
-export default function SimilarProperties({ neighbourhood }) {
+import HomeCard from "../home/HomeCard";
+import { useNavigate } from "react-router-dom";
+export default function SimilarProperties({ neighbourhood, propertyId }) {
   const { properties, isPending, error } = useProperties({
     location: neighbourhood,
   });
-
+  const navigate = useNavigate();
   if (isPending || error || !properties?.length || !neighbourhood) return null;
 
+  const filteredProperties = properties.filter(
+    (property) => property.id !== propertyId,
+  );
+
+  const alternativeProperties = properties.slice(0, 4);
+
   return (
-    <section>
+    <section className="mt-16 border-t border-neutral-200/60 pt-12">
       <div className="mb-8 flex items-end justify-between gap-6 sm:mb-9">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#1b3b2b]">
-            Similar properties
-          </p>
+          <div className="mb-1.5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#1b3b2b]">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Similar Properties</span>
+          </div>
 
-          <h2 className="mt-2 text-3xl font-medium tracking-[-0.04em] text-[var(--color-text)] sm:text-[38px]">
+          <h2 className="text-2xl font-light tracking-[-0.03em] text-[var(--color-text-primary)] sm:text-3xl lg:text-4xl">
             You might also like
           </h2>
 
-          <p className="mt-2 max-w-xl text-sm leading-6 text-neutral-500 sm:text-[15px]">
+          <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--color-text-secondary)]">
             Explore more homes similar to this one in{" "}
-            <span className="font-medium text-neutral-700">
+            <span className="font-medium text-[var(--color-text-primary)]">
               {neighbourhood}
             </span>{" "}
             and nearby areas.
@@ -31,23 +40,42 @@ export default function SimilarProperties({ neighbourhood }) {
 
         <button
           type="button"
-          className="group hidden shrink-0 items-center gap-2 text-sm font-medium text-[#1b3b2b] sm:flex"
+          onClick={() => navigate("/properties")}
+          className="group hidden shrink-0 items-center gap-2 text-sm font-medium text-[#1b3b2b] transition-colors hover:text-[#143022] sm:flex"
         >
-          View all properties
+          <span>View all properties</span>
           <ArrowRight
-            size={17}
+            size={16}
             strokeWidth={1.8}
             className="transition-transform duration-200 group-hover:translate-x-1"
           />
         </button>
       </div>
 
-      <PropertySection
-        properties={properties}
-        title=""
-        description=""
-        variant=""
-      />
+      <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+        {filteredProperties.length > 0
+          ? filteredProperties.slice(0, 4).map((property) => (
+              <div key={property.id} className="w-full">
+                <HomeCard {...property} />
+              </div>
+            ))
+          : alternativeProperties.map((property) => (
+              <div key={property.id} className="w-full">
+                <HomeCard {...property} />
+              </div>
+            ))}
+      </div>
+
+      <div className="mt-8 flex justify-center sm:hidden">
+        <button
+          type="button"
+          onClick={() => navigate("/properties")}
+          className="inline-flex items-center gap-2 text-sm font-medium text-[#1b3b2b]"
+        >
+          <span>View all properties</span>
+          <ArrowRight size={16} strokeWidth={1.8} />
+        </button>
+      </div>
     </section>
   );
 }

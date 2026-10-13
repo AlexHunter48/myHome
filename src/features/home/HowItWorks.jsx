@@ -4,13 +4,14 @@ import {
   MessageCircle,
   ArrowRight,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   {
     number: "01",
     icon: Search,
     title: "Discover",
-    text: "Search homes across Nigeria by location, property type, and budget.",
+    text: "Search homes across Lagos by location, property type, and budget.",
   },
   {
     number: "02",
@@ -27,10 +28,10 @@ const steps = [
 ];
 
 export default function HowItWorks() {
+  const navigate = useNavigate();
   return (
-    <section className="bg-[#f7f5f0] px-6 py-20 md:px-10 lg:px-16 lg:py-28">
+    <section className="bg-white px-6 py-20 md:px-10 lg:px-16 lg:py-28">
       <div className="mx-auto max-w-7xl">
-        {/* HEADER */}
         <div className="max-w-2xl">
           <div className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#1b3b2b]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#1b3b2b]" />
@@ -100,12 +101,13 @@ export default function HowItWorks() {
             </p>
 
             <p className="mt-2 text-sm text-white/60">
-              Start exploring properties across Nigeria.
+              Start exploring properties across Lagos.
             </p>
           </div>
 
           <button
             type="button"
+            onClick={() => navigate("/properties")}
             className="group flex shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#1b3b2b] transition hover:bg-neutral-100"
           >
             Explore homes

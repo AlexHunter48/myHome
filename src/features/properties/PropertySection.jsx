@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import HomeCard from "../home/HomeCard";
 import { ArrowRight } from "lucide-react";
 
@@ -8,6 +9,7 @@ export default function PropertySection({
   variant = "default",
 }) {
   const isSimilar = variant === "similar";
+
   return (
     <section className="mt-4">
       <div className="mb-7 flex items-end justify-between gap-6">

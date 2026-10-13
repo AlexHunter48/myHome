@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useSignUp from "../features/auth/useSignup";
 
@@ -22,6 +22,9 @@ export default function Auth() {
   const { logIn, isPending: loggingIn } = useLogIn();
 
   const isLoading = signingUp || loggingIn;
+  const [searchParams] = useSearchParams();
+
+  const redirectTo = searchParams.get("redirectTo");
 
   const navigate = useNavigate();
 
@@ -44,6 +47,9 @@ export default function Auth() {
         {
           onSuccess: () => {
             reset();
+            if (redirectTo) {
+              navigate(decodeURIComponent(redirectTo), { replace: true });
+            }
           },
         },
       );
@@ -58,7 +64,12 @@ export default function Auth() {
       {
         onSuccess: () => {
           reset();
-          navigate("/properties");
+
+          if (redirectTo) {
+            navigate(decodeURIComponent(redirectTo), { replace: true });
+          } else {
+            navigate("/properties", { replace: true });
+          }
         },
       },
     );

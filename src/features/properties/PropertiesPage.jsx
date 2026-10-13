@@ -1,4 +1,11 @@
-import { SlidersHorizontal, MapPin, X, House, ArrowRight } from "lucide-react";
+import {
+  SlidersHorizontal,
+  MapPin,
+  X,
+  House,
+  ArrowRight,
+  ListClock,
+} from "lucide-react";
 import StickySearch from "../home/StickySearch";
 import PropertySection from "./PropertySection";
 import { useEffect, useState } from "react";
@@ -9,6 +16,7 @@ import PropertyEmptyState from "./PropertyEmptyState";
 import formatPriceInput from "../../utils/formatInputCurrency";
 import { useAuth } from "../../context/AuthContext";
 import { getVisitorId } from "../../utils/visitorId";
+import AllProperties from "./AllProperties";
 
 const filters = ["All", "For Sale", "For Rent"];
 
@@ -311,6 +319,7 @@ export default function Properties() {
     bathrooms: null,
     propertyType: "",
     listingStatus: null,
+    listingState: null,
   });
 
   const navigate = useNavigate();
@@ -329,6 +338,10 @@ export default function Properties() {
     getVisitorId();
   }, [user?.id]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const activeType = searchParams.get("type");
@@ -342,6 +355,7 @@ export default function Properties() {
     propertyType: searchParams.get("type") || "",
     listingStatus: searchParams.get("status") || "",
     location: searchParams.get("location") || "",
+    listingState: searchParams.get("state") || "",
   };
 
   const { properties, isPending, error } = useProperties(newFilters);
@@ -531,9 +545,9 @@ export default function Properties() {
                             Featured homes
                           </h2>
 
-                          <span className="rounded-full bg-[#e8eee9] px-2.5 py-1 text-[11px] font-semibold text-[#1b3b2b]">
+                          {/* <span className="rounded-full bg-[#e8eee9] px-2.5 py-1 text-[11px] font-semibold text-[#1b3b2b]">
                             {featuredHomes.length}
-                          </span>
+                          </span> */}
                         </div>
 
                         <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
@@ -543,6 +557,13 @@ export default function Properties() {
 
                       <button
                         type="button"
+                        onClick={() => {
+                          const params = new URLSearchParams();
+
+                          params.set("state", "published");
+
+                          navigate("/properties/all");
+                        }}
                         className="hidden shrink-0 items-center gap-2 text-sm font-medium text-[#1b3b2b] transition hover:gap-3 sm:flex"
                       >
                         See all
@@ -579,6 +600,12 @@ export default function Properties() {
 
                         <button
                           type="button"
+                          onClick={() => {
+                            const params = new URLSearchParams();
+
+                            params.set("location", location);
+                            navigate(`/listings/category?${params.toString()}`);
+                          }}
                           className="hidden shrink-0 items-center gap-2 text-sm font-medium text-[#1b3b2b] transition hover:gap-3 sm:flex"
                         >
                           See all

@@ -126,6 +126,7 @@ export default function MenuContent({ isAuthenticated }) {
           <div className="space-y-1">
             <button
               type="button"
+              onClick={() => navigate("/properties")}
               className="flex w-full items-center rounded-2xl px-3 py-3 text-left text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
             >
               Properties

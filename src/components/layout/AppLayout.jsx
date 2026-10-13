@@ -49,9 +49,8 @@ export default function AppLayout() {
       <FeaturedHomes />
       <ExploreLocations />
       <Insights />
-      <TrustSection />
       <HowItWorks />
-      <CTA />
+      {/* <CTA /> */}
       <Footer />
     </div>
   );

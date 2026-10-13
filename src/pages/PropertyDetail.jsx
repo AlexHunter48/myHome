@@ -97,7 +97,11 @@ export default function PropertyDetail() {
 
   async function newConversation() {
     if (!isAuthenticated) {
-      navigate("/auth");
+      const destination = conversation
+        ? `/messages/${conversation.id}`
+        : `/messages/new?propertyId=${property.id}`;
+
+      navigate(`/auth?redirectTo=${encodeURIComponent(destination)}`);
       return;
     }
 
@@ -539,6 +543,7 @@ export default function PropertyDetail() {
           <div className="mt-8 border-t border-neutral-200/70 pt-10 pb-20 sm:mt-10 sm:pt-12 sm:pb-24">
             <SimilarProperties
               neighbourhood={property?.neighbourhood || property?.city}
+              propertyId={property?.id}
             />
           </div>
         </div>

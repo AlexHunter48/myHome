@@ -92,7 +92,6 @@ export default function NewMessage() {
 
   return (
     <div className="min-h-screen bg-[#f7f5f0]">
-      {/* Header */}
       <header className="border-b border-neutral-200/80 bg-white">
         <div className="mx-auto flex h-[72px] max-w-2xl items-center gap-4 px-5 sm:px-6">
           <button

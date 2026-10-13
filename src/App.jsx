@@ -27,6 +27,8 @@ import PersonalInformation from "./features/settings/PersonalInformation";
 import LoginSecurity from "./features/settings/LoginSecurity";
 import Notifications from "./features/settings/Notifications";
 import Preferences from "./features/settings/Preferences";
+import AllProperties from "./features/properties/AllProperties";
+import CategoryListings from "./features/listings/Category";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,8 @@ export default function App() {
               }
             />
             <Route path="/properties/favourites" element={<Favorites />} />
+            <Route path="/properties/all" element={<AllProperties />} />
+            <Route path="/listings/category" element={<CategoryListings />} />
             <Route path="/properties/:id/images" element={<PropertyImages />} />
             <Route path="/properties/:id" element={<PropertyDetail />} />
             <Route path="/messages" element={<MessagesPage />} />

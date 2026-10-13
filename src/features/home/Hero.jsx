@@ -5,12 +5,36 @@ import { MapPin, Home, Banknote, Search, Navigation } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 import { useRef } from "react";
 import StickySearch from "./StickySearch";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import formatPriceInput from "../../utils/formatInputCurrency";
 
 export default function Hero() {
   const [whereQuery, setWhereQuery] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [showStickySearch, setShowStickySearch] = useState(false);
+
+  const [type, setType] = useState("");
+  const { isAuthenticated, profile } = useAuth();
+  const navigate = useNavigate();
+
+  function showHomes() {
+    const params = new URLSearchParams();
+    if (whereQuery) {
+      params.set("location", whereQuery);
+    }
+    if (minPrice) {
+      params.set("minPrice", minPrice);
+    }
+    if (maxPrice) {
+      params.set("maxPrice", maxPrice);
+    }
+    if (type) {
+      params.set("type", type);
+    }
+    navigate(`/properties?${params.toString()}`);
+  }
 
   const searchRef = useRef(null);
 
@@ -200,12 +224,12 @@ export default function Hero() {
                       </div>
                     </button>
 
-                    {["Lekki, Nigeria", "Ikeja, Nigeria", "Abuja, Nigeria"].map(
+                    {["Lekki", "Surulere", "Victoria Island"].map(
                       (location) => (
                         <button
                           key={location}
                           type="button"
-                          onClick={() => setWhereQuery(location)}
+                          onClick={() => setWhereQuery(location.toLowerCase())}
                           className="
                         w-full
                         flex
@@ -354,43 +378,51 @@ export default function Hero() {
 
                     <div className="grid grid-cols-2 gap-2">
                       <input
-                        type="number"
-                        value={minPrice}
-                        onChange={(e) => setMinPrice(e.target.value)}
+                        type="text"
+                        inputMode="numeric"
+                        value={formatPriceInput(minPrice)}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          setMinPrice(value);
+                        }}
                         onClick={(e) => e.stopPropagation()}
                         placeholder="Min ₦"
                         className="
-                        w-full
-                        px-3
-                        py-2
-                        text-sm
-                        border
-                        border-neutral-200
-                        rounded-xl
-                        focus:outline-none
-                        focus:ring-1
-                        focus:ring-[#1b3b2b]
-                      "
+                                                            w-full
+                                                            px-3
+                                                            py-2
+                                                            text-sm
+                                                            border
+                                                            border-neutral-200
+                                                            rounded-xl
+                                                            focus:outline-none
+                                                            focus:ring-1
+                                                            focus:ring-[#1b3b2b]
+                                                          "
                       />
 
                       <input
-                        type="number"
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(e.target.value)}
+                        type="text"
+                        inputMode="numeric"
+                        value={formatPriceInput(maxPrice)}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/\D/g, "");
+                          setMaxPrice(value);
+                        }}
                         onClick={(e) => e.stopPropagation()}
                         placeholder="Max ₦"
                         className="
-                        w-full
-                        px-3
-                        py-2
-                        text-sm
-                        border
-                        border-neutral-200
-                        rounded-xl
-                        focus:outline-none
-                        focus:ring-1
-                        focus:ring-[#1b3b2b]
-                      "
+                                                            w-full
+                                                            px-3
+                                                            py-2
+                                                            text-sm
+                                                            border
+                                                            border-neutral-200
+                                                            rounded-xl
+                                                            focus:outline-none
+                                                            focus:ring-1
+                                                            focus:ring-[#1b3b2b]
+                                                          "
                       />
                     </div>
                   </div>
@@ -399,6 +431,7 @@ export default function Hero() {
 
               <button
                 type="button"
+                onClick={showHomes}
                 aria-label="Search"
                 className="
                 w-full

@@ -1,9 +1,10 @@
 import { ArrowUpRight, MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const locations = [
   {
     id: 1,
-    name: "Lagos",
+    name: "Ikoyi",
     properties: "1,240 homes",
     image:
       "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80",
@@ -11,21 +12,21 @@ const locations = [
   },
   {
     id: 2,
-    name: "Abuja",
+    name: "Yaba",
     properties: "680 homes",
     image:
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 3,
-    name: "Port Harcourt",
+    name: "Lekki",
     properties: "420 homes",
     image:
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 4,
-    name: "Ibadan",
+    name: "Victoria Island",
     properties: "310 homes",
     image:
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
@@ -33,6 +34,7 @@ const locations = [
 ];
 
 export default function ExploreLocations() {
+  const navigate = useNavigate();
   return (
     <section className="bg-white px-6 py-20 md:px-10 lg:px-16 lg:py-28">
       <div className="mx-auto max-w-7xl">
@@ -46,11 +48,11 @@ export default function ExploreLocations() {
             <h2 className="font-serif text-4xl leading-[1.05] tracking-tight text-neutral-950 md:text-5xl lg:text-[3.5rem]">
               Find your place
               <br />
-              across <span className="text-[#1b3b2b]">Nigeria.</span>
+              across <span className="text-[#1b3b2b]">Lagos.</span>
             </h2>
 
             <p className="mt-5 max-w-lg text-sm leading-6 text-neutral-600 md:text-base">
-              Explore homes in some of Nigeria's most sought-after cities and
+              Explore homes in some of Lagos most sought-after cities and
               discover the neighbourhood that's right for you.
             </p>
           </div>
@@ -58,6 +60,7 @@ export default function ExploreLocations() {
           <button
             type="button"
             className="group flex w-fit items-center gap-2 text-sm font-semibold text-[#1b3b2b]"
+            onClick={() => navigate("/properties")}
           >
             Explore all locations
             <ArrowUpRight
