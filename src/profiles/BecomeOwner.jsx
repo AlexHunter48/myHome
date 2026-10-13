@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
-import myHomeLogo from "../assets/home3.png";
+import myHomeLogo from "../assets/home3.webp";
 import useUpdateProfileRole from "./useUpdateProfileRole";
 
 export default function BecomeOwner() {

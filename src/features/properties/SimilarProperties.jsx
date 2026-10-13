@@ -8,13 +8,18 @@ export default function SimilarProperties({ neighbourhood, propertyId }) {
     location: neighbourhood,
   });
   const navigate = useNavigate();
-  if (isPending || error || !properties?.length || !neighbourhood) return null;
 
-  const filteredProperties = properties.filter(
+  const filteredProperties = properties?.filter(
     (property) => property.id !== propertyId,
   );
-
-  const alternativeProperties = properties.slice(0, 4);
+  if (
+    isPending ||
+    error ||
+    !properties?.length ||
+    !neighbourhood ||
+    filteredProperties.length === 0
+  )
+    return null;
 
   return (
     <section className="mt-16 border-t border-neutral-200/60 pt-12">
@@ -53,17 +58,12 @@ export default function SimilarProperties({ neighbourhood, propertyId }) {
       </div>
 
       <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-        {filteredProperties.length > 0
-          ? filteredProperties.slice(0, 4).map((property) => (
-              <div key={property.id} className="w-full">
-                <HomeCard {...property} />
-              </div>
-            ))
-          : alternativeProperties.map((property) => (
-              <div key={property.id} className="w-full">
-                <HomeCard {...property} />
-              </div>
-            ))}
+        {filteredProperties &&
+          filteredProperties.slice(0, 4).map((property) => (
+            <div key={property.id} className="w-full">
+              <HomeCard {...property} />
+            </div>
+          ))}
       </div>
 
       <div className="mt-8 flex justify-center sm:hidden">

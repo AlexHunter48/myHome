@@ -45,10 +45,7 @@ export default function StickySearch() {
     <Modal>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-neutral-200/70 bg-[var(--color-background)]/95 shadow-sm backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center px-4 sm:px-6 lg:h-[88px] lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-6 lg:px-10">
-          <Link
-            className="flex shrink-0 items-center justify-start"
-            to="/properties"
-          >
+          <Link className="flex shrink-0 items-center justify-start" to="/">
             <img
               src={myhome}
               alt="MyHome"

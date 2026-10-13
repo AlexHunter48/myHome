@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import AppLayout from "./components/layout/AppLayout";
 import Properties from "./pages/properties";
 import AuthProvider from "./context/AuthContext";
@@ -6,29 +7,33 @@ import Auth from "./pages/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Toaster from "./components/ui/Toaster";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import PropertyForm from "./features/properties/PropertyForm";
 import PropertyImages from "./features/properties/PropertyImages";
-import PropertyDetail from "./pages/PropertyDetail";
-import ProtectedOwnerRoute from "./features/properties/ProtectedOwnerRoute";
 import PageNotFound from "./pages/PageNotFound";
-import Favorites from "./pages/Favourites";
-import Messages from "./features/messages/Messages";
+import ProtectedOwnerRoute from "./features/properties/ProtectedOwnerRoute";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
-import MessagesPage from "./pages/MessagesPage";
-import NewMessage from "./features/messages/NewMessage";
-import BecomeOwner from "./profiles/BecomeOwner";
-import MyListings from "./profiles/MyListings";
-import ListingLayout from "./components/layout/ListingLayout";
-import EditListings from "./features/listings/EditListings";
-import EditPhotos from "./features/listings/EditPhotos";
-import ManageListing from "./features/listings/ManageListing";
-import SettingsLayout from "./components/layout/SettingsLayout";
-import PersonalInformation from "./features/settings/PersonalInformation";
-import LoginSecurity from "./features/settings/LoginSecurity";
-import Notifications from "./features/settings/Notifications";
-import Preferences from "./features/settings/Preferences";
-import AllProperties from "./features/properties/AllProperties";
-import CategoryListings from "./features/listings/Category";
+import Loader from "./components/ui/Loader";
+const PropertyForm = lazy(() => import("./features/properties/PropertyForm"));
+const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
+const Favorites = lazy(() => import("./pages/Favourites"));
+
+const Messages = lazy(() => import("./features/messages/Messages"));
+const MessagesPage = lazy(() => import("./pages/MessagesPage"));
+const NewMessage = lazy(() => import("./features/messages/NewMessage"));
+const BecomeOwner = lazy(() => import("./profiles/BecomeOwner"));
+const MyListings = lazy(() => import("./profiles/MyListings"));
+const ListingLayout = lazy(() => import("./components/layout/ListingLayout"));
+const EditListings = lazy(() => import("./features/listings/EditListings"));
+const EditPhotos = lazy(() => import("./features/listings/EditPhotos"));
+const ManageListing = lazy(() => import("./features/listings/ManageListing"));
+const SettingsLayout = lazy(() => import("./components/layout/SettingsLayout"));
+const PersonalInformation = lazy(
+  () => import("./features/settings/PersonalInformation"),
+);
+const LoginSecurity = lazy(() => import("./features/settings/LoginSecurity"));
+const Notifications = lazy(() => import("./features/settings/Notifications"));
+const Preferences = lazy(() => import("./features/settings/Preferences"));
+const AllProperties = lazy(() => import("./features/properties/AllProperties"));
+const CategoryListings = lazy(() => import("./features/listings/Category"));
 
 const queryClient = new QueryClient();
 
@@ -37,93 +42,98 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route index element={<AppLayout />} />
-            <Route path="/properties" element={<Properties />} />
-            <Route
-              path="/properties/new"
-              element={
-                <ProtectedOwnerRoute>
-                  <PropertyForm />
-                </ProtectedOwnerRoute>
-              }
-            />
-            <Route path="/properties/favourites" element={<Favorites />} />
-            <Route path="/properties/all" element={<AllProperties />} />
-            <Route path="/listings/category" element={<CategoryListings />} />
-            <Route path="/properties/:id/images" element={<PropertyImages />} />
-            <Route path="/properties/:id" element={<PropertyDetail />} />
-            <Route path="/messages" element={<MessagesPage />} />
-
-            <Route
-              path="/messages/new"
-              element={
-                <ProtectedRoute>
-                  <NewMessage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/messages/:conversationId"
-              element={
-                <ProtectedRoute>
-                  <Messages />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/profile/owner" element={<BecomeOwner />} />
-            <Route path="/listings" element={<ListingLayout />}>
+          <Suspense fallback={<Loader />}>
+            <Routes>
+              <Route index element={<AppLayout />} />
+              <Route path="/properties" element={<Properties />} />
               <Route
-                index
+                path="/properties/new"
                 element={
                   <ProtectedOwnerRoute>
-                    <MyListings />
+                    <PropertyForm />
                   </ProtectedOwnerRoute>
                 }
               />
+              <Route path="/properties/favourites" element={<Favorites />} />
+              <Route path="/properties/all" element={<AllProperties />} />
+              <Route path="/listings/category" element={<CategoryListings />} />
+              <Route
+                path="/properties/:id/images"
+                element={<PropertyImages />}
+              />
+              <Route path="/properties/:id" element={<PropertyDetail />} />
+              <Route path="/messages" element={<MessagesPage />} />
 
               <Route
-                path=":id/edit"
+                path="/messages/new"
                 element={
-                  <ProtectedOwnerRoute>
-                    <EditListings />
-                  </ProtectedOwnerRoute>
+                  <ProtectedRoute>
+                    <NewMessage />
+                  </ProtectedRoute>
                 }
               />
               <Route
-                path=":id/edit/photos"
+                path="/messages/:conversationId"
                 element={
-                  <ProtectedOwnerRoute>
-                    <EditPhotos />
-                  </ProtectedOwnerRoute>
+                  <ProtectedRoute>
+                    <Messages />
+                  </ProtectedRoute>
                 }
               />
+              <Route path="/profile/owner" element={<BecomeOwner />} />
+              <Route path="/listings" element={<ListingLayout />}>
+                <Route
+                  index
+                  element={
+                    <ProtectedOwnerRoute>
+                      <MyListings />
+                    </ProtectedOwnerRoute>
+                  }
+                />
+
+                <Route
+                  path=":id/edit"
+                  element={
+                    <ProtectedOwnerRoute>
+                      <EditListings />
+                    </ProtectedOwnerRoute>
+                  }
+                />
+                <Route
+                  path=":id/edit/photos"
+                  element={
+                    <ProtectedOwnerRoute>
+                      <EditPhotos />
+                    </ProtectedOwnerRoute>
+                  }
+                />
+                <Route
+                  path=":id/manage"
+                  element={
+                    <ProtectedOwnerRoute>
+                      <ManageListing />
+                    </ProtectedOwnerRoute>
+                  }
+                />
+              </Route>
               <Route
-                path=":id/manage"
+                path="/settings"
                 element={
-                  <ProtectedOwnerRoute>
-                    <ManageListing />
-                  </ProtectedOwnerRoute>
+                  <ProtectedRoute>
+                    <SettingsLayout />
+                  </ProtectedRoute>
                 }
-              />
-            </Route>
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <SettingsLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<PersonalInformation />} />
-              <Route path="personal" element={<PersonalInformation />} />
-              <Route path="login-security" element={<LoginSecurity />} />
-              <Route path="notifications" element={<Notifications />} />
-              <Route path="preferences" element={<Preferences />} />
-            </Route>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
+              >
+                <Route index element={<PersonalInformation />} />
+                <Route path="personal" element={<PersonalInformation />} />
+                <Route path="login-security" element={<LoginSecurity />} />
+                <Route path="notifications" element={<Notifications />} />
+                <Route path="preferences" element={<Preferences />} />
+              </Route>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </Suspense>
         </AuthProvider>
       </BrowserRouter>
       <Toaster />

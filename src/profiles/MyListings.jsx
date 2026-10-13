@@ -1,6 +1,6 @@
 import { Check, ChevronDown, Clock, Eye, House, Plus } from "lucide-react";
 import StickySearch from "../features/home/StickySearch";
-import heroplant from "../assets/heroplant.png";
+import heroplant from "../assets/heroplant.webp";
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import useGetMyProperties from "../features/properties/useGetMyProperties";

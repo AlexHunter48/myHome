@@ -16,7 +16,6 @@ import PropertyEmptyState from "./PropertyEmptyState";
 import formatPriceInput from "../../utils/formatInputCurrency";
 import { useAuth } from "../../context/AuthContext";
 import { getVisitorId } from "../../utils/visitorId";
-import AllProperties from "./AllProperties";
 
 const filters = ["All", "For Sale", "For Rent"];
 

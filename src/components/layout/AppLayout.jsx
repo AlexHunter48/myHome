@@ -1,6 +1,6 @@
 import Hero from "../../features/home/Hero";
 import Navbar from "./Navbar";
-import modernHome from "../../assets/modern-home.png";
+import modernHome from "../../assets/modern-home.webp";
 
 import FeaturedHomes from "../../features/home/FeaturedHomes";
 import ExploreLocations from "../../locations/ExploreLocations";
@@ -18,6 +18,7 @@ export default function AppLayout() {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${modernHome})` }}
         />
+
         <div
           className="
     hidden md:block
