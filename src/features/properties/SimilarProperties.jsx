@@ -57,7 +57,7 @@ export default function SimilarProperties({ neighbourhood, propertyId }) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+      <div className="mt-7 -mx-6 px-6 flex gap-4 overflow-x-auto overscroll-x-contain snap-x snap-mandatory scroll-px-6 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 xl:grid-cols-4">
         {filteredProperties &&
           filteredProperties.slice(0, 4).map((property) => (
             <div key={property.id} className="w-full">

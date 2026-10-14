@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useSignUp from "../features/auth/useSignup";
@@ -18,6 +18,9 @@ import useLogIn from "../features/auth/useLogin";
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { signUp, isPending: signingUp } = useSignUp();
   const { logIn, isPending: loggingIn } = useLogIn();
 
