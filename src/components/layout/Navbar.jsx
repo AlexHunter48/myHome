@@ -17,39 +17,14 @@ export default function Navbar() {
   return (
     <Modal>
       <header className="px-6 lg:px-10 py-5 flex justify-between items-center relative z-20 bg-transparent">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1 ">
           <span className="shrink-0">
-            <img src={myhome} className="h-9 w-auto object-contain" />
+            <img src={myhome} className="h-9  w-auto object-contain" />
           </span>
-          <h1 className="text-2xl lg:text-3xl text-(--color-primary) font-medium tracking-tight font-sans">
+          <h1 className=" hidden md:block text-2xl lg:text-3xl text-(--color-primary) font-medium tracking-tight font-sans">
             MyHome
           </h1>
         </div>
-
-        {/* <nav className="hidden lg:block">
-          <ul className="flex gap-8 whitespace-nowrap text-sm tracking-wide">
-            <li>
-              <a to="#" className={navLinkClasses}>
-                Explore
-              </a>
-            </li>
-            <li>
-              <a to="#" className={navLinkClasses}>
-                Homes
-              </a>
-            </li>
-            <li>
-              <a to="#" className={navLinkClasses}>
-                Areas
-              </a>
-            </li>
-            <li>
-              <a to="#" className={navLinkClasses}>
-                Insights
-              </a>
-            </li>
-          </ul>
-        </nav> */}
 
         <div className="flex items-center gap-2 justify-center">
           <div className="flex items-center gap-1 border border-neutral-200 rounded-full p-1.5 shadow-sm bg-neutral-100">
@@ -76,14 +51,6 @@ export default function Navbar() {
               <Heart size={20} strokeWidth={1.8} />
             </Link>
 
-            {/* <Link
-              to="#"
-              aria-label="Account"
-              className="flex h-10 w-10 items-center justify-center rounded-full text-[var(--color-text-primary)] transition-colors duration-200 hover:bg-neutral-100 hover:text-[var(--color-primary)]"
-            >
-              <CircleUserRound size={18} strokeWidth={1.8} />
-            </Link> */}
-
             <Modal.Open opens="menu" toggle>
               <button>
                 <Menu size={22} strokeWidth={1.8} />
@@ -98,7 +65,7 @@ export default function Navbar() {
             </Modal.Window>
           </div>
           <div className="ml-0.5 shrink-0 lg:hidden">
-            <Modal.Open opens="menu" toggle>
+            {/* <Modal.Open opens="menu" toggle>
               <button
                 type="button"
                 aria-label="Open menu"
@@ -118,7 +85,7 @@ export default function Navbar() {
               >
                 <Menu size={21} strokeWidth={1.8} />
               </button>
-            </Modal.Open>
+            </Modal.Open> */}
 
             <Modal.Window
               name="menu"

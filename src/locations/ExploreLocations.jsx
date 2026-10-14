@@ -70,15 +70,23 @@ export default function ExploreLocations() {
           </button>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
-          <LocationCard location={locations[0]} featured />
+        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+          <div className="h-[300px] md:h-auto [&>*]:h-full max-md:[&>*]:min-h-0">
+            <LocationCard location={locations[0]} featured />
+          </div>
 
-          <div className="grid grid-cols-1 gap-5">
-            <LocationCard location={locations[1]} />
+          <div className="grid grid-cols-1 gap-4 md:gap-5">
+            <div className="h-[200px] md:h-auto [&>*]:h-full max-md:[&>*]:min-h-0">
+              <LocationCard location={locations[1]} />
+            </div>
 
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <LocationCard location={locations[2]} />
-              <LocationCard location={locations[3]} />
+            <div className="grid grid-cols-2 gap-4 md:gap-5">
+              <div className="h-[180px] md:h-auto [&>*]:h-full max-md:[&>*]:min-h-0">
+                <LocationCard location={locations[2]} />
+              </div>
+              <div className="h-[180px] md:h-auto [&>*]:h-full max-md:[&>*]:min-h-0">
+                <LocationCard location={locations[3]} />
+              </div>
             </div>
           </div>
         </div>

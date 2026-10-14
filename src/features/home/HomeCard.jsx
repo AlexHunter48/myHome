@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CheckCircle2,
   ChevronLeft,
@@ -63,20 +63,53 @@ export default function HomeCard({
     e.stopPropagation();
     setCurrentImage(index);
   };
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
+  const swiped = useRef(false);
 
+  function handleTouchStart(e) {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    swiped.current = false;
+  }
+
+  function handleTouchEnd(e) {
+    if (touchStartX.current === null || propertyImages.length < 2) return;
+
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    touchStartX.current = null;
+
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+
+    swiped.current = true;
+    setCurrentImage((i) =>
+      dx < 0
+        ? (i + 1) % propertyImages.length
+        : (i - 1 + propertyImages.length) % propertyImages.length,
+    );
+  }
   const isSimilar = variant === "similar";
 
   return (
     <article
-      className={`group w-full overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)] ${
+      className={`group w-full overflow-hidden rounded-[22px] border border-neutral-200/80 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)] ${
         isSimilar ? "rounded-[24px]" : ""
       }`}
     >
       <div
         className={`relative cursor-pointer overflow-hidden bg-neutral-100 ${
-          isSimilar ? "aspect-[1.45/1]" : "aspect-[1.35/1]"
-        }`}
-        onClick={() => navigate(`/properties/${propertyId}`)}
+          propertyImages.length > 1 ? "touch-pan-y" : ""
+        } ${isSimilar ? "aspect-[1.45/1]" : "aspect-[1.35/1]"}`}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onClick={() => {
+          if (swiped.current) {
+            swiped.current = false;
+            return;
+          }
+          navigate(`/properties/${propertyId}`);
+        }}
       >
         {propertyImages.length > 0 ? (
           <img
@@ -139,7 +172,7 @@ export default function HomeCard({
             type="button"
             aria-label="Previous image"
             onClick={previousImage}
-            className="absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white group-hover:opacity-100"
+            className="absolute left-4 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white group-hover:opacity-100 [@media(hover:hover)]:flex"
           >
             <ChevronLeft className="h-4 w-4" strokeWidth={2} />
           </button>
@@ -150,14 +183,14 @@ export default function HomeCard({
             type="button"
             aria-label="Next image"
             onClick={nextImage}
-            className="absolute right-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white group-hover:opacity-100"
+            className="absolute right-4 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white group-hover:opacity-100 [@media(hover:hover)]:flex"
           >
             <ChevronRight className="h-4 w-4" strokeWidth={2} />
           </button>
         )}
 
         {propertyImages.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1.5">
+          <div className="pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-1.5 [@media(hover:hover)]:pointer-events-auto">
             {propertyImages.map((_, index) => (
               <button
                 key={index}
@@ -175,7 +208,7 @@ export default function HomeCard({
         )}
 
         {propertyImages.length > 1 && (
-          <div className="absolute bottom-4 right-4 rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur-md">
+          <div className="pointer-events-none absolute bottom-4 right-4 rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur-md">
             {currentImage + 1} / {propertyImages.length}
           </div>
         )}
@@ -212,8 +245,11 @@ export default function HomeCard({
           {title}
         </h3>
 
-        <div className="mt-2 flex items-center gap-1.5 text-sm text-neutral-500">
-          <MapPin className="h-4 w-4 shrink-0" strokeWidth={1.7} />
+        <div className="mt-3.5 flex items-center gap-2 border-t border-neutral-100 pt-3.5 text-sm text-neutral-600">
+          <MapPin
+            className="h-4 w-4 shrink-0 text-[#1b3b2b]/70"
+            strokeWidth={1.7}
+          />
 
           <span className="truncate">{location}</span>
         </div>

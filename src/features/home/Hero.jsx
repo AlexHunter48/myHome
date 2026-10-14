@@ -77,7 +77,7 @@ export default function Hero() {
             md:min-h-[560px]
           "
           >
-            <div className="max-w-xl space-y-3 md:space-y-4 relative z-10">
+            <div className="max-w-xl space-y-3 md:space-y-4 relative z-10 ">
               <h1
                 className="
                 text-4xl
@@ -87,7 +87,7 @@ export default function Hero() {
                 font-serif
                 text-(--color-text-primary)
                 tracking-tight
-                leading-[1.08]
+                leading-[1.15]
                 md:leading-[1.15]
                 mb-1
               "
@@ -108,19 +108,19 @@ export default function Hero() {
                 leading-relaxed
               "
               >
-                Rent or buy trusted properties across Nigeria.{" "}
+                Rent or buy trusted properties across{" "}
+                <span className="">Lagos.</span>{" "}
                 <br className="hidden sm:inline" />
                 No middleman. No hidden fees.
               </p>
             </div>
-
             <div
               className="
               w-full
               max-w-4xl
               bg-white/95
               backdrop-blur-md
-              rounded-3xl
+              rounded-2xl
               md:rounded-full
               p-2.5
               md:p-3
@@ -128,12 +128,12 @@ export default function Hero() {
               border
               border-white/40
               flex
-              flex-col
+             flex-col
               md:flex-row
               items-center
-              gap-1
+              gap-1.5
               md:gap-2
-              mt-8
+              mt-4
               md:mt-3
             "
               ref={searchRef}
@@ -147,7 +147,8 @@ export default function Hero() {
                     gap-3
                     px-3
                     md:px-4
-                    py-3
+                    py-2.5
+                    md:py-3
                     border-b
                     md:border-b-0
                     md:border-r
@@ -159,8 +160,8 @@ export default function Hero() {
                     cursor-pointer
                   "
                   >
-                    <div className="p-2.5 bg-[#EAF0EC] text-[#1b3b2b] rounded-full shrink-0">
-                      <MapPin className="w-5 h-5" />
+                    <div className="p-2 md:p-2.5 bg-[#EAF0EC] text-[#1b3b2b] rounded-full shrink-0">
+                      <MapPin className="w-4 h-4 md:w-5 md:h-5" />
                     </div>
 
                     <div className="flex flex-col text-left w-full min-w-0">
@@ -263,19 +264,19 @@ export default function Hero() {
                 </Modal.Window>
               </div>
 
-              <div className="relative flex-1 w-full">
-                <Modal.Open opens="PropertyType">
-                  <div
-                    className="
+              <div className="grid grid-cols-2 w-full md:contents">
+                <div className="relative flex-1 w-full">
+                  <Modal.Open opens="PropertyType">
+                    <div
+                      className="
                     flex
                     items-center
                     gap-3
                     px-3
                     md:px-4
-                    py-3
-                    border-b
-                    md:border-b-0
-                    md:border-r
+                    py-2.5
+                    md:py-3
+                    border-r
                     border-neutral-200
                     hover:bg-stone-100
                     rounded-2xl
@@ -283,34 +284,40 @@ export default function Hero() {
                     transition
                     cursor-pointer
                   "
+                    >
+                      <div className="hidden md:block p-2.5 bg-[#EAF0EC] text-[#1b3b2b] rounded-full shrink-0">
+                        <Home className="w-5 h-5" />
+                      </div>
+
+                      <div className="flex flex-col text-left min-w-0">
+                        <span className="text-xs font-semibold tracking-wide text-neutral-800">
+                          <span className="md:hidden">Property</span>
+                          <span className="hidden md:inline">
+                            What are you looking for?
+                          </span>
+                        </span>
+
+                        <span className="text-sm text-neutral-500 truncate">
+                          <span className="md:hidden">Any type</span>
+                          <span className="hidden md:inline">
+                            Apartment, Duplex...
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </Modal.Open>
+
+                  <Modal.Window
+                    name="PropertyType"
+                    positionClasses="left-0 md:-left-8"
                   >
-                    <div className="p-2.5 bg-[#EAF0EC] text-[#1b3b2b] rounded-full shrink-0">
-                      <Home className="w-5 h-5" />
-                    </div>
-
-                    <div className="flex flex-col text-left min-w-0">
-                      <span className="text-xs font-semibold tracking-wide text-neutral-800">
-                        What are you looking for?
-                      </span>
-
-                      <span className="text-sm text-neutral-500 truncate">
-                        Apartment, Duplex...
-                      </span>
-                    </div>
-                  </div>
-                </Modal.Open>
-
-                <Modal.Window
-                  name="PropertyType"
-                  positionClasses="left-0 md:-left-8"
-                >
-                  <div className="grid grid-cols-2 gap-2 p-1">
-                    {["Apartment", "Duplex", "Terrace", "Penthouse"].map(
-                      (type) => (
-                        <button
-                          key={type}
-                          type="button"
-                          className="
+                    <div className="grid grid-cols-2 gap-2 p-1">
+                      {["Apartment", "Duplex", "Terrace", "Penthouse"].map(
+                        (type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            className="
                           p-3
                           border
                           border-neutral-200
@@ -323,71 +330,72 @@ export default function Hero() {
                           text-neutral-700
                           transition
                         "
-                        >
-                          {type}
-                        </button>
-                      ),
-                    )}
-                  </div>
-                </Modal.Window>
-              </div>
+                          >
+                            {type}
+                          </button>
+                        ),
+                      )}
+                    </div>
+                  </Modal.Window>
+                </div>
 
-              <div className="relative flex-1 w-full">
-                <Modal.Open opens="budget">
-                  <div
-                    className="
+                <div className="relative flex-1 w-full">
+                  <Modal.Open opens="budget">
+                    <div
+                      className="
                     flex
                     items-center
                     gap-3
                     px-3
                     md:px-4
-                    py-3
+                    py-2.5
+                    md:py-3
                     hover:bg-stone-100
                     rounded-2xl
                     md:rounded-full
                     transition
                     cursor-pointer
                   "
+                    >
+                      <div className="hidden md:block p-2.5 bg-[#EAF0EC] text-[#1b3b2b] rounded-full shrink-0">
+                        <Banknote className="w-5 h-5" />
+                      </div>
+
+                      <div className="flex flex-col text-left min-w-0">
+                        <span className="text-xs font-semibold tracking-wide text-neutral-800">
+                          Budget
+                        </span>
+
+                        <span className="text-sm text-neutral-500 truncate">
+                          {minPrice || maxPrice
+                            ? `₦${minPrice || "0"} - ₦${maxPrice || "Any"}`
+                            : "Any budget"}
+                        </span>
+                      </div>
+                    </div>
+                  </Modal.Open>
+
+                  <Modal.Window
+                    name="budget"
+                    positionClasses="right-0 md:left-auto"
                   >
-                    <div className="p-2.5 bg-[#EAF0EC] text-[#1b3b2b] rounded-full shrink-0">
-                      <Banknote className="w-5 h-5" />
-                    </div>
+                    <div className="space-y-3 p-2">
+                      <h4 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">
+                        Price Range
+                      </h4>
 
-                    <div className="flex flex-col text-left min-w-0">
-                      <span className="text-xs font-semibold tracking-wide text-neutral-800">
-                        Budget
-                      </span>
-
-                      <span className="text-sm text-neutral-500 truncate">
-                        {minPrice || maxPrice
-                          ? `₦${minPrice || "0"} - ₦${maxPrice || "Any"}`
-                          : "Any budget"}
-                      </span>
-                    </div>
-                  </div>
-                </Modal.Open>
-
-                <Modal.Window
-                  name="budget"
-                  positionClasses="right-0 md:left-auto"
-                >
-                  <div className="space-y-3 p-2">
-                    <h4 className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">
-                      Price Range
-                    </h4>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={formatPriceInput(minPrice)}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, "");
-                          setMinPrice(value);
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        placeholder="Min ₦"
-                        className="
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={formatPriceInput(minPrice)}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, "");
+                            setMinPrice(value);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          placeholder="Min ₦"
+                          className="
                                                             w-full
                                                             px-3
                                                             py-2
@@ -399,19 +407,19 @@ export default function Hero() {
                                                             focus:ring-1
                                                             focus:ring-[#1b3b2b]
                                                           "
-                      />
+                        />
 
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={formatPriceInput(maxPrice)}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, "");
-                          setMaxPrice(value);
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        placeholder="Max ₦"
-                        className="
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          value={formatPriceInput(maxPrice)}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, "");
+                            setMaxPrice(value);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          placeholder="Max ₦"
+                          className="
                                                             w-full
                                                             px-3
                                                             py-2
@@ -423,10 +431,11 @@ export default function Hero() {
                                                             focus:ring-1
                                                             focus:ring-[#1b3b2b]
                                                           "
-                      />
+                        />
+                      </div>
                     </div>
-                  </div>
-                </Modal.Window>
+                  </Modal.Window>
+                </div>
               </div>
 
               <button
@@ -436,7 +445,7 @@ export default function Hero() {
                 className="
                 w-full
                 md:w-auto
-                p-3.5
+                p-3
                 md:p-4
                 bg-[#1b3b2b]
                 hover:bg-[#142e21]

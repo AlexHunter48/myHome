@@ -65,32 +65,14 @@ export default function FeaturedHomes() {
           </button>
         </div>
 
-        {isPending && (
-          <section className="pt-2">
-            <div className="mb-4">
-              <div className="h-7 w-48 animate-pulse rounded-lg bg-neutral-200" />
-              <div className="mt-2 h-4 w-64 animate-pulse rounded-lg bg-neutral-200" />
-            </div>
-
-            <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <div key={index}>
-                  <div className="aspect-[4/3] animate-pulse rounded-[24px] bg-neutral-200" />
-
-                  <div className="space-y-2 px-1 pt-3">
-                    <div className="h-5 w-3/4 animate-pulse rounded-lg bg-neutral-200" />
-                    <div className="h-4 w-1/2 animate-pulse rounded-lg bg-neutral-200" />
-                    <div className="h-4 w-2/3 animate-pulse rounded-lg bg-neutral-200" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-7 -mx-6 px-6 flex gap-4 overflow-x-auto overscroll-x-contain snap-x snap-mandatory scroll-px-6 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 xl:grid-cols-4">
           {homes?.map((home) => (
-            <HomeCard key={home.id} {...home} />
+            <div
+              key={home.id}
+              className="snap-start shrink-0 w-[85%] sm:w-auto"
+            >
+              <HomeCard {...home} />
+            </div>
           ))}
         </div>
 

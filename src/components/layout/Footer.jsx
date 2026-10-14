@@ -26,7 +26,7 @@ const supportLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#111614] px-6 pb-6 pt-16 text-white md:px-10 lg:px-16 lg:pt-20">
+    <footer className="bg-[#111614] px-6 pb-6 pt-24 text-white md:px-10 lg:px-16 lg:pt-28">
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
           <div className="max-w-sm">

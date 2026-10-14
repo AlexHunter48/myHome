@@ -59,9 +59,10 @@ export default function StickySearch() {
           <div className="ml-auto flex min-w-0 items-center lg:mx-auto lg:mt-1">
             <div className="flex w-[min(760px,calc(100vw-138px))] items-center rounded-full border border-neutral-200 bg-white p-1 shadow-sm lg:w-[min(760px,55vw)] lg:p-1.5">
               <Modal.Open opens="where">
-                <button
-                  type="button"
-                  className="flex min-w-0 flex-1 items-center gap-2 rounded-full px-3 py-2 text-left transition hover:bg-neutral-50 sm:px-4 sm:py-2.5"
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-full px-3 py-2 text-left transition hover:bg-neutral-50 sm:px-4 sm:py-2.5"
                 >
                   <MapPin
                     className="h-4 w-4 shrink-0 text-[#1b3b2b]"
@@ -69,7 +70,7 @@ export default function StickySearch() {
                   />
 
                   <div className="flex flex-col text-left w-full min-w-0">
-                    <label className="text-xs font-semibold tracking-wide text-neutral-800 cursor-pointer">
+                    <label className="hidden md:block text-xs font-semibold tracking-wide text-neutral-800 cursor-pointer">
                       Where?
                     </label>
 
@@ -79,17 +80,22 @@ export default function StickySearch() {
                       onChange={(e) => setWhereQuery(e.target.value)}
                       placeholder="Lagos, Lekki, Ikoyi..."
                       className="
-                        text-sm
-                        text-[var(--color-text-primary)]
-                        placeholder:text-neutral-500
-                        bg-transparent
-                        focus:outline-none
-                        w-full
-                        font-medium
-                      "
+            hidden md:block
+              text-sm
+              text-[var(--color-text-primary)]
+              placeholder:text-neutral-500
+              bg-transparent
+              focus:outline-none
+              w-full
+              font-medium
+            "
                     />
+
+                    <span className="truncate text-sm font-medium text-neutral-700 md:hidden">
+                      {whereQuery || "Search homes"}
+                    </span>
                   </div>
-                </button>
+                </div>
               </Modal.Open>
               <Modal.Window
                 name="where"
@@ -109,17 +115,17 @@ export default function StickySearch() {
                     type="button"
                     onClick={() => setWhereQuery("Nearby")}
                     className="
-                      w-full
-                      flex
-                      items-center
-                      gap-4
-                      p-3
-                      hover:bg-neutral-50
-                      rounded-2xl
-                      transition
-                      text-left
-                      group
-                    "
+            w-full
+            flex
+            items-center
+            gap-4
+            p-3
+            hover:bg-neutral-50
+            rounded-2xl
+            transition
+            text-left
+            group
+          "
                   >
                     <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-100 transition">
                       <Navigation className="w-5 h-5" />
@@ -143,17 +149,17 @@ export default function StickySearch() {
                         type="button"
                         onClick={() => setWhereQuery(location)}
                         className="
-                        w-full
-                        flex
-                        items-center
-                        gap-4
-                        p-3
-                        hover:bg-neutral-50
-                        rounded-2xl
-                        transition
-                        text-left
-                        group
-                      "
+              w-full
+              flex
+              items-center
+              gap-4
+              p-3
+              hover:bg-neutral-50
+              rounded-2xl
+              transition
+              text-left
+              group
+            "
                       >
                         <div className="p-3 bg-[#EAF0EC] text-[#1b3b2b] rounded-xl group-hover:bg-[#d8e4dc] transition">
                           <MapPin className="w-5 h-5" />
@@ -174,9 +180,11 @@ export default function StickySearch() {
                 </div>
               </Modal.Window>
 
-              <div className="hidden h-8 w-px bg-neutral-200 sm:block" />
+              {/* FIX: divider was sm:block, now md:block */}
+              <div className="hidden h-8 w-px bg-neutral-200 md:block" />
               <Modal.Open opens="PropertyType">
-                <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full px-4 py-2.5 text-left transition hover:bg-neutral-50 sm:flex">
+                {/* FIX: was "sm:flex" with no "hidden", so it showed on phones. Now hidden below md */}
+                <div className="hidden min-w-0 flex-1 items-center gap-2 rounded-full px-4 py-2.5 text-left transition hover:bg-neutral-50 md:flex">
                   <Home
                     className="h-4 w-4 shrink-0 text-[#1b3b2b]"
                     strokeWidth={1.8}
@@ -208,25 +216,25 @@ export default function StickySearch() {
                     "Bungalow",
                     "Office",
                     "Shop",
-                    "Warehouse ",
+                    "Warehouse", // FIX: removed trailing space
                   ].map((type) => (
                     <button
                       key={type}
                       type="button"
                       onClick={() => setType(type)}
                       className="
-                                        p-3
-                                        border
-                                        border-neutral-200
-                                        hover:border-[#1b3b2b]
-                                        hover:bg-[#EAF0EC]/40
-                                        rounded-xl
-                                        text-left
-                                        font-medium
-                                        text-sm
-                                        text-neutral-700
-                                        transition
-                                      "
+                              p-3
+                              border
+                              border-neutral-200
+                              hover:border-[#1b3b2b]
+                              hover:bg-[#EAF0EC]/40
+                              rounded-xl
+                              text-left
+                              font-medium
+                              text-sm
+                              text-neutral-700
+                              transition
+                            "
                     >
                       {type}
                     </button>
@@ -279,17 +287,17 @@ export default function StickySearch() {
                       onClick={(e) => e.stopPropagation()}
                       placeholder="Min ₦"
                       className="
-                                      w-full
-                                      px-3
-                                      py-2
-                                      text-sm
-                                      border
-                                      border-neutral-200
-                                      rounded-xl
-                                      focus:outline-none
-                                      focus:ring-1
-                                      focus:ring-[#1b3b2b]
-                                    "
+                            w-full
+                            px-3
+                            py-2
+                            text-sm
+                            border
+                            border-neutral-200
+                            rounded-xl
+                            focus:outline-none
+                            focus:ring-1
+                            focus:ring-[#1b3b2b]
+                          "
                     />
 
                     <input
@@ -303,17 +311,17 @@ export default function StickySearch() {
                       onClick={(e) => e.stopPropagation()}
                       placeholder="Max ₦"
                       className="
-                                      w-full
-                                      px-3
-                                      py-2
-                                      text-sm
-                                      border
-                                      border-neutral-200
-                                      rounded-xl
-                                      focus:outline-none
-                                      focus:ring-1
-                                      focus:ring-[#1b3b2b]
-                                    "
+                            w-full
+                            px-3
+                            py-2
+                            text-sm
+                            border
+                            border-neutral-200
+                            rounded-xl
+                            focus:outline-none
+                            focus:ring-1
+                            focus:ring-[#1b3b2b]
+                          "
                     />
                   </div>
                 </div>

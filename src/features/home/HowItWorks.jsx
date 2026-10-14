@@ -26,14 +26,13 @@ const steps = [
     text: "Found the right home? Connect directly with the owner and take the next step.",
   },
 ];
-
 export default function HowItWorks() {
   const navigate = useNavigate();
   return (
-    <section className="bg-white px-6 py-20 md:px-10 lg:px-16 lg:py-28">
+    <section className="bg-white px-6 pt-14 pb-0 md:px-10 md:pt-20 lg:px-16 lg:pt-28 mb-28">
       <div className="mx-auto max-w-7xl">
         <div className="max-w-2xl">
-          <div className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#1b3b2b]">
+          <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#1b3b2b] md:mb-5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#1b3b2b]" />
             Simple by design
           </div>
@@ -46,34 +45,34 @@ export default function HowItWorks() {
             <span className="text-[#1b3b2b]">complicated.</span>
           </h2>
 
-          <p className="mt-6 max-w-lg text-sm leading-6 text-neutral-600 md:text-base">
+          <p className="mt-5 max-w-lg text-sm leading-6 text-neutral-600 md:mt-6 md:text-base">
             MyHome brings the essential parts of property searching together in
             one simple experience.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-0 md:grid-cols-3">
+        <div className="mt-10 grid gap-0 md:mt-16 md:grid-cols-3">
           {steps.map((step, index) => {
             const Icon = step.icon;
 
             return (
               <div
                 key={step.number}
-                className={`relative border-neutral-200 py-8 md:px-8 md:py-4 ${
+                className={`relative border-neutral-200 py-6 md:px-8 md:py-4 md:first:pl-0 ${
                   index !== 0 ? "border-t md:border-l md:border-t-0" : ""
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-serif text-5xl tracking-tight text-neutral-200">
+                  <span className="font-serif text-4xl tracking-tight text-neutral-200 md:text-5xl">
                     {step.number}
                   </span>
 
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#1b3b2b] shadow-sm">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#EAF0EC] text-[#1b3b2b] md:h-12 md:w-12">
                     <Icon className="h-5 w-5" strokeWidth={1.7} />
                   </div>
                 </div>
 
-                <div className="mt-10 max-w-xs">
+                <div className="mt-5 max-w-xs md:mt-10">
                   <h3 className="font-serif text-2xl tracking-tight text-neutral-950">
                     {step.title}
                   </h3>
@@ -85,7 +84,7 @@ export default function HowItWorks() {
 
                 {index !== steps.length - 1 && (
                   <ArrowRight
-                    className="absolute -right-3 top-1/2 z-10 hidden h-6 w-6 -translate-y-1/2 bg-[#f7f5f0] p-1 text-neutral-400 md:block"
+                    className="absolute -right-3 top-1/2 z-10 hidden h-6 w-6 -translate-y-1/2 bg-white p-1 text-neutral-400 md:block"
                     strokeWidth={1.5}
                   />
                 )}
@@ -94,7 +93,8 @@ export default function HowItWorks() {
           })}
         </div>
 
-        <div className="mt-16 flex flex-col gap-5 rounded-3xl bg-[#1b3b2b] p-7 text-white md:flex-row md:items-center md:justify-between md:p-9">
+        {/* CTA card now straddles the white section and the footer below */}
+        <div className="relative z-10 mt-10 -mb-12 flex flex-col gap-5 rounded-3xl bg-[#1b3b2b] p-6 text-white shadow-xl ring-1 ring-white/10 md:mt-16 md:flex-row md:items-center md:justify-between md:p-9">
           <div>
             <p className="font-serif text-2xl tracking-tight md:text-3xl">
               Your next home could be closer than you think.

@@ -23,14 +23,13 @@ const insights = [
     text: "Get useful location information before making an important property decision.",
   },
 ];
-
 export default function Insights() {
   return (
-    <section className="bg-[#f7f5f0] px-6 py-20 md:px-10 lg:px-16 lg:py-28">
+    <section className="bg-[#f7f5f0] px-6 py-14 md:px-10 md:py-20 lg:px-16 lg:py-28">
       <div className="mx-auto max-w-7xl">
-        <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-end">
+        <div className="grid gap-6 md:gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-end lg:gap-12">
           <div className="max-w-2xl">
-            <div className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#1b3b2b]">
+            <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#1b3b2b] md:mb-5">
               <MapPin className="h-3.5 w-3.5" strokeWidth={2} />
               MyHome Insights
             </div>
@@ -51,7 +50,7 @@ export default function Insights() {
 
             <button
               type="button"
-              className="group mt-6 flex items-center gap-2 text-sm font-semibold text-[#1b3b2b]"
+              className="group mt-5 flex items-center gap-2 text-sm font-semibold text-[#1b3b2b] md:mt-6"
             >
               Learn about MyHome Insights
               <ArrowUpRight
@@ -62,14 +61,14 @@ export default function Insights() {
           </div>
         </div>
 
-        <div className="mt-14 overflow-hidden rounded-[2rem] bg-[#1b3b2b] text-white">
+        <div className="mt-10 overflow-hidden rounded-[2rem] bg-[#1b3b2b] text-white md:mt-14">
           <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="p-7 md:p-10 lg:p-14">
+            <div className="p-6 md:p-10 lg:p-14">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/55">
                 Example market snapshot
               </p>
 
-              <div className="mt-8">
+              <div className="mt-6 md:mt-8">
                 <div className="flex items-end justify-between gap-4">
                   <div>
                     <p className="text-sm text-white/60">
@@ -87,12 +86,16 @@ export default function Insights() {
                   </div>
                 </div>
 
-                <div className="mt-10 flex h-32 items-end gap-2 border-b border-white/10">
+                <div className="mt-6 flex h-28 items-end gap-2 border-b border-white/10 md:mt-10 md:h-32">
                   {[35, 48, 43, 62, 57, 76, 69, 88, 82, 100].map(
-                    (height, index) => (
+                    (height, index, bars) => (
                       <div
                         key={index}
-                        className="flex-1 rounded-t-sm bg-white/20 transition hover:bg-white/40"
+                        className={`flex-1 rounded-t-sm transition ${
+                          index === bars.length - 1
+                            ? "bg-white/60 hover:bg-white/80"
+                            : "bg-white/20 hover:bg-white/40"
+                        }`}
                         style={{ height: `${height}%` }}
                       />
                     ),
@@ -109,17 +112,20 @@ export default function Insights() {
               </div>
             </div>
 
-            <div className="border-t border-white/10 p-7 md:p-10 lg:border-l lg:border-t-0 lg:p-14">
+            <div className="border-t border-white/10 p-6 md:p-10 lg:border-l lg:border-t-0 lg:p-14">
               <p className="text-sm font-medium text-white/60">
                 What you could know
               </p>
 
-              <div className="mt-7 space-y-7">
+              <div className="mt-5 grid gap-5 md:mt-7 md:grid-cols-3 md:gap-6 lg:grid-cols-1 lg:gap-7">
                 {insights.map((item) => {
                   const Icon = item.icon;
 
                   return (
-                    <div key={item.title} className="flex gap-4">
+                    <div
+                      key={item.title}
+                      className="flex gap-4 md:flex-col md:gap-3 lg:flex-row lg:gap-4"
+                    >
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10">
                         <Icon className="h-4.5 w-4.5" strokeWidth={1.7} />
                       </div>
@@ -141,8 +147,8 @@ export default function Insights() {
           </div>
         </div>
 
-        <div className="mt-7 flex flex-col gap-2 text-xs text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>.</p>
+        <div className="mt-5 flex flex-col gap-2 text-xs text-neutral-500 sm:flex-row sm:items-center sm:justify-between md:mt-7">
+          <p>Figures shown are for illustration only.</p>
 
           <div className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#1b3b2b]" />

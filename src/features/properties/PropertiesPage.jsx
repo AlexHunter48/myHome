@@ -468,18 +468,18 @@ export default function Properties() {
               <MapPin className="h-3.5 w-3.5" strokeWidth={1.8} />
 
               <span>
-                {location.city}, {location.country}
+                {location.city},{location.country}
               </span>
             </div>
 
-            <h1 className="mt-3 max-w-4xl text-4xl font-semibold leading-[0.98] tracking-[-0.045em] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
+            <h1 className="mt-4 max-w-4xl text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.035em] text-[var(--color-text-primary)] sm:mt-3 sm:text-5xl sm:leading-[0.98] sm:tracking-[-0.045em] lg:text-6xl">
               Find somewhere
               <span className="block text-[#1b3b2b]">
                 you'll love to call home.
               </span>
             </h1>
 
-            <p className="mt-3 max-w-2xl text-sm  text-[var(--color-text-secondary)] ">
+            <p className="mt-4 max-w-2xl text-pretty text-sm leading-6 text-[var(--color-text-secondary)] sm:mt-3 sm:leading-5">
               Explore verified properties from trusted owners across Lagos and
               beyond, curated for the way you want to live.
             </p>
