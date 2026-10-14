@@ -49,13 +49,13 @@ export default function PropertySection({
         ))}
       </div>
 
-      <button
+      {/* <button
         type="button"
         className="mt-1 flex items-center gap-2 text-sm font-semibold text-[#1b3b2b] sm:hidden"
       >
         See all
         <ArrowRight className="h-4 w-4" />
-      </button>
+      </button> */}
     </section>
   );
 }

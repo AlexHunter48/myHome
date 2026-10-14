@@ -77,40 +77,17 @@ export default function Hero() {
             md:min-h-[560px]
           "
           >
-            <div className="max-w-xl space-y-3 md:space-y-4 relative z-10 ">
-              <h1
-                className="
-                text-4xl
-                sm:text-5xl
-                md:text-5xl
-                lg:text-6xl
-                font-serif
-                text-(--color-text-primary)
-                tracking-tight
-                leading-[1.15]
-                md:leading-[1.15]
-                mb-1
-              "
-              >
+            <div className="relative z-10 max-w-xl space-y-4 md:space-y-4">
+              <h1 className="font-serif text-[2.5rem] leading-[1.18] tracking-tight text-(--color-text-primary) sm:text-5xl md:leading-[1.15] md:mb-1 lg:text-6xl">
                 Find your next <br />
                 home, directly <br />
                 from{" "}
                 <span className="text-[var(--color-primary)]">owners.</span>
               </h1>
 
-              <p
-                className="
-                text-sm
-                sm:text-base
-                md:text-lg
-                text-stone-950
-                font-medium
-                leading-relaxed
-              "
-              >
-                Rent or buy trusted properties across{" "}
-                <span className="">Lagos.</span>{" "}
-                <br className="hidden sm:inline" />
+              <p className="text-sm font-medium leading-6 text-stone-950 sm:text-base sm:leading-relaxed md:text-lg">
+                Rent or buy trusted properties across Lagos.{" "}
+                <br className="hidden min-[380px]:inline" />
                 No middleman. No hidden fees.
               </p>
             </div>

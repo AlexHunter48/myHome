@@ -605,7 +605,7 @@ export default function Properties() {
                             params.set("location", location);
                             navigate(`/listings/category?${params.toString()}`);
                           }}
-                          className="hidden shrink-0 items-center gap-2 text-sm font-medium text-[#1b3b2b] transition hover:gap-3 sm:flex"
+                          className="flex shrink-0 items-center gap-2 whitespace-nowrap text-sm font-medium text-[#1b3b2b] transition hover:gap-3"
                         >
                           See all
                           <ArrowRight className="h-4 w-4" />

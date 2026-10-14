@@ -135,7 +135,7 @@ export default function Auth() {
                 />
               </div>
 
-              <span className="text-2xl font-medium tracking-tight text-[#1b3b2b]">
+              <span className="text-2xl font-medium tracking-tight text-[#1b3b2b] hidden md:block">
                 MyHome
               </span>
             </Link>
