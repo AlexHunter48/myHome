@@ -53,6 +53,18 @@ export default function PropertyDetail() {
     });
   }, [property?.id, user?.id, recordView]);
 
+  useEffect(() => {
+    if (isGalleryOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isGalleryOpen]);
+
   const ownerId = property?.owner_id;
   const buyerId = user?.id;
 
