@@ -16,6 +16,21 @@
   }
 }
 
+.property-map {
+  position: relative;
+  width: 100%;
+}
+
+.property-map .leaflet-container {
+  width: 100%;
+  height: 320px;
+}
+
+@media (min-width: 640px) {
+  .property-map .leaflet-container {
+    height: 380px;
+  }
+}
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
 }

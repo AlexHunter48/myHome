@@ -2,24 +2,24 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://my-home-three-nu.vercel.app",
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://my-home-three-nu.vercel.app",
+// ];
 
-const origin = req.headers.get("Origin") || "";
-const corsOrigin = allowedOrigins.includes(origin) ? origin : "https://my-home-three-nu.vercel.app";
+// const origin = req.headers.get("Origin") || "";
+// const corsOrigin = allowedOrigins.includes(origin) ? origin : "https://my-home-three-nu.vercel.app";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": corsOrigin,
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
-};
 // const corsHeaders = {
-//   "Access-Control-Allow-Origin": "http://localhost:5173",
-//   "Access-Control-Allow-Headers":
-//     "authorization, x-client-info, apikey, content-type",
+//   "Access-Control-Allow-Origin": corsOrigin,
+//   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+//   // "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
 // };
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://my-home-three-nu.vercel.app",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
 
 const categories = [
   {
