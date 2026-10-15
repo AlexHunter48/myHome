@@ -2,6 +2,9 @@
 
 A modern Nigerian real-estate marketplace connecting property owners directly with people looking to buy or rent.
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-2ea44f?style=for-the-badge&logo=vercel&logoColor=white)](https://my-home-three-nu.vercel.app/) 
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AlexHunter48/myHome)
+
 **MyHome** is a full-stack web application focused on making property discovery clearer, more accessible, and more transparent. It combines a polished property-browsing experience with owner listing tools, saved properties, and direct conversations between prospective buyers or renters and property owners.
 
 > **Project status:** MyHome is an actively developed portfolio project. Demonstration listings and imagery may be illustrative and should not be interpreted as verified offers for real properties.
