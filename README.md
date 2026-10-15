@@ -130,11 +130,11 @@ Authorization should be enforced through Supabase policies as well as the applic
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
-cd <YOUR_PROJECT_DIRECTORY>
+git clone https://github.com/AlexHunter48/myHome.git
+cd myHome
 ```
 
-Replace the placeholders with the actual repository URL and directory name.
+
 
 ### 2. Install dependencies
 
