@@ -106,7 +106,6 @@ Supabase
 * Node.js (Current LTS release recommended)
 * npm
 * A Supabase project with configured tables, storage buckets, and policies
-
 ### 1. Clone the repository
 ```bash
 git clone [https://github.com/AlexHunter48/myHome.git](https://github.com/AlexHunter48/myHome.git)
