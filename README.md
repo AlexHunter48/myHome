@@ -1,404 +1,182 @@
-MyHome
+# MyHome
 
 A modern Nigerian real-estate marketplace connecting property owners directly with people looking to buy or rent.
 
-MyHome is a full-stack web application focused on making property discovery clearer, more accessible, and more transparent. It combines a polished property-browsing experience with owner listing tools, saved properties, and direct conversations between prospective buyers or renters and property owners.
+**MyHome** is a full-stack web application focused on making property discovery clearer, more accessible, and more transparent. It combines a polished property-browsing experience with owner listing tools, saved properties, and direct conversations between prospective buyers or renters and property owners.
 
-Project status: MyHome is an actively developed portfolio project. Demonstration listings and imagery may be illustrative and should not be interpreted as verified offers for real properties.
+> **Project status:** MyHome is an actively developed portfolio project. Demonstration listings and imagery may be illustrative and should not be interpreted as verified offers for real properties.
 
-Contents
+---
 
-Overview
+## Table of Contents
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Application Architecture](#application-architecture)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Supabase Configuration](#supabase-configuration)
+- [Available Scripts](#available-scripts)
+- [Security Considerations](#security-considerations)
+- [Project Status & Limitations](#project-status--limitations)
+- [Roadmap](#roadmap)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
 
-Key features
+---
 
-Technology stack
-
-Application architecture
-
-Getting started
-
-Environment variables
-
-Supabase configuration
-
-Available scripts
-
-Security considerations
-
-Project status and limitations
-
-Roadmap
-
-Acknowledgements
-
-License
-
-Overview
+## Overview
 
 Finding a property can involve fragmented information, uncertain listing quality, and unnecessary intermediaries. MyHome is designed to give buyers and renters a more straightforward way to explore available properties and contact owners, while giving owners tools to manage their listings.
 
 The product is designed initially around the Nigerian property market, with a visual identity built around deep green, warm neutrals, clean typography, generous spacing, and restrained motion. The interface takes inspiration from the clarity of leading property and hospitality products without copying their layouts or branding.
 
-Key features
-
-Property discovery
-
-Browse property listings with key information such as price, location, property type, bedrooms, bathrooms, and area.
-
-Explore property detail pages with image galleries and property information.
-
-Search and filter listings to narrow down relevant options.
-
-View location information and map-related details where coordinates are available.
-
-Save properties for later reference.
-
-Property management
-
-Create property listings through a structured form.
-
-Upload and associate images with listings.
-
-Manage draft and published listing states.
-
-Access owner-focused listing functionality and publishing controls.
-
-Direct communication
-
-Start an enquiry about a property.
-
-View conversations and exchange messages with the other participant.
-
-Receive real-time message updates through Supabase Realtime.
-
-Track unread messages and message read state.
-
-Account and settings
-
-Authenticate through Supabase Auth.
-
-Maintain a user profile and upload a profile avatar.
-
-Access account settings, including personal information and login/security screens.
-
-Receive in-app feedback for supported actions and errors.
-
-Interface and experience
-
-Responsive layouts for desktop and mobile screens.
-
-Reusable React components and routed page layouts.
-
-Loading, empty, and error states in key flows.
-
-Subtle motion and iconography to support the interface without overwhelming it.
-
-Feature availability can vary as development continues. See Project status and limitations before treating the application as a production property service.
-
-Technology stack
-
-Area
-
-Technology
-
-Purpose
-
-Frontend
-
-React
-
-Component-based user interface
-
-Build tooling
-
-Vite
-
-Local development and production builds
-
-Styling
-
-Tailwind CSS
-
-Responsive styling and design system implementation
-
-Routing
-
-React Router
-
-Client-side navigation and nested layouts
-
-Server state
-
-TanStack React Query
-
-Data fetching, caching, and mutations
-
-Backend platform
-
-Supabase
-
-Authentication, database, storage, and realtime services
-
-Database
-
-PostgreSQL via Supabase
-
-Relational application data
-
-Access control
-
-Supabase Row Level Security (RLS)
-
-Database-level authorization policies
-
-Forms
-
-React Hook Form
-
-Form state and validation support
-
-Icons
-
-Lucide React
-
-Interface icons
-
-Animation
-
-Motion
-
-Interface transitions and animations
-
-Notifications
-
-React Hot Toast
-
-Action feedback and error notifications
-
-Maps
-
-Leaflet
-
-Interactive property maps
-
-Application architecture
-
-MyHome uses a React single-page application connected to Supabase services.
+---
+
+## Key Features
+
+### Property Discovery
+* **Browse Listings:** Filter by key information such as price, location, property type, bedrooms, bathrooms, and area.
+* **Property Detail Pages:** Interactive image galleries and comprehensive property metadata.
+* **Search & Filters:** Narrow down options effortlessly based on specific criteria.
+* **Interactive Maps:** View geographical locations with integrated Leaflet maps.
+* **Save Properties:** Bookmark favorite listings for quick access.
+
+### Property Management
+* **Listing Creation:** Structured step-by-step form for property onboarding.
+* **Media Uploads:** Associate image assets directly with listings.
+* **Publishing Control:** Draft and active publishing states for property owners.
+
+### Direct Communication
+* **Enquiry System:** Initiate direct discussions regarding specific properties.
+* **Real-time Messaging:** Chat functionality powered by Supabase Realtime.
+* **Read Receipts:** Track message status and unread notifications.
+
+### Account & Security
+* **Authentication:** Secure logins powered by Supabase Auth.
+* **User Profiles:** Manage personal profiles and avatar images.
+* **Database Authorization:** Granular authorization enforced via Row Level Security (RLS).
+
+---
+
+## Technology Stack
+
+| Area | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | React | Component-based UI library |
+| **Build Tooling** | Vite | Fast local dev server & production bundler |
+| **Styling** | Tailwind CSS | Responsive utility-first design system |
+| **Routing** | React Router | Client-side routing and layout management |
+| **Server State** | TanStack React Query | Async state management & caching |
+| **Backend** | Supabase | Auth, PostgreSQL database, storage & realtime |
+| **Database** | PostgreSQL | Relational database engine |
+| **Access Control** | Supabase RLS | Row-level database policies |
+| **Forms** | React Hook Form | Form state management and validation |
+| **Icons** | Lucide React | Clean interface icons |
+| **Animation** | Motion | Transition effects and interface feedback |
+| **Notifications** | React Hot Toast | User toast alerts and status feedback |
+| **Maps** | Leaflet | Interactive property map rendering |
+
+---
+
+## Application Architecture
 
 Browser
-  |
-  v
+│
+▼
 React + Vite
-  ├── React Router       Page routing and layouts
-  ├── TanStack Query     Remote data, caching, mutations
-  └── Service modules    Application data operations
-          |
-          v
-       Supabase
-          ├── Auth        User authentication and sessions
-          ├── PostgreSQL  Profiles, properties, images, saves,
-          |               conversations, and messages
-          ├── Storage     Property images and profile avatars
-          ├── Realtime    Live message updates
-          └── RLS         Database access policies
+├── React Router       (Page routing & layouts)
+├── TanStack Query     (Remote data, caching & mutations)
+└── Service Modules    (Data operations)
+│
+▼
+Supabase
+├── Auth        (Authentication & sessions)
+├── PostgreSQL  (Profiles, properties, images, saved items, chats)
+├── Storage     (Property images & profile avatars)
+├── Realtime    (Live chat updates)
+└── RLS         (Security policies)
 
-The database includes core tables for profiles, properties, property_images, saved_properties, conversations, and messages. Property images are stored in the properties-image Storage bucket; profile avatars use the avatars bucket.
 
-Authorization should be enforced through Supabase policies as well as the application's route and UI logic. Hiding a control in the interface is not a substitute for database-level access control.
+---
 
-Getting started
+## Getting Started
 
-Prerequisites
+### Prerequisites
+* Node.js (Current LTS release recommended)
+* npm
+* A Supabase project with configured tables, storage buckets, and policies
 
-Node.js (a current LTS release is recommended)
-
-npm
-
-A Supabase project with the required database tables, Storage buckets, Auth configuration, and Row Level Security policies
-
-Git, if cloning the repository
-
-1. Clone the repository
-
-git clone(https://github.com/AlexHunter48/myHome)
-cd (https://github.com/AlexHunter48/myHome)
-
-Replace the placeholders with the actual repository URL and directory name.
-
+### 1. Clone the repository
+```bash
+git clone [https://github.com/AlexHunter48/myHome.git](https://github.com/AlexHunter48/myHome.git)
+cd myHome
 2. Install dependencies
-
+Bash
 npm install
-
 3. Configure environment variables
+Create a .env file in the project root:
 
-Create a .env file in the project root and add the Supabase values described below.
-
+Code snippet
 VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_publishable_or_anon_key
-
-The variable names must match those referenced in the project's Supabase client file. If the existing client uses a different key name, keep the code and .env file consistent.
-
-4. Configure Supabase
-
-Use your own Supabase project and ensure its schema and policies match the application. The application expects the tables and Storage buckets described in Supabase configuration.
-
-5. Start the development server
-
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+4. Start the development server
+Bash
 npm run dev
-
-Vite will print the local development URL in the terminal, commonly http://localhost:5173.
-
-6. Create a production build
-
+5. Production build
+Bash
 npm run build
-
-To preview the generated build locally:
-
 npm run preview
+Environment Variables
+Variable	Required	Description
+VITE_SUPABASE_URL	Yes	Public URL of your Supabase project
+VITE_SUPABASE_ANON_KEY	Yes	Client publishable key for browser requests
+Security Note: Never include service_role keys or private secrets in .env files prefixed with VITE_.
 
-Environment variables
+Supabase Configuration
+Tables Required
+profiles: User information and roles
 
-Variable
+properties: Property listing data and coordinates
 
-Required
+property_images: Image paths and display order
 
-Description
+saved_properties: User-bookmarked listings
 
-VITE_SUPABASE_URL
+conversations: Buyer/Owner chat instances
 
-Yes
+messages: Individual chat messages and read statuses
 
-URL of the Supabase project
+Storage Buckets
+properties-image: Public access for property photos
 
-VITE_SUPABASE_ANON_KEY
+avatars: Public/Authenticated access for profile avatars
 
-Yes
+Available Scripts
+Command	Action
+npm run dev	Starts the Vite local development server
+npm run build	Compiles the production build bundle
+npm run preview	Runs a local preview server for the build folder
+Security Considerations
+Configure Row Level Security (RLS) policies on all Supabase tables.
 
-Supabase client key intended for browser use, subject to correctly configured RLS policies
+Restrict bucket uploads by file size and MIME type.
 
-Vite exposes variables prefixed with VITE_ to client-side code. Never put a Supabase service_role key, database password, private API key, or other server secret in a VITE_ variable or commit it to source control.
+Never expose administrative or service role keys on the frontend.
 
-Keep local values in .env, make sure .env is ignored by Git, and provide a .env.example containing placeholder values if you want to document the required variable names for other developers.
-
-Supabase configuration
-
-MyHome relies on Supabase for authentication, relational data, file storage, and realtime messaging. A fresh Supabase project will not automatically contain the schema and policies expected by this application.
-
-The current application data model includes the following tables:
-
-profiles — application profile information and user role.
-
-properties — property details, ownership, and listing status.
-
-property_images — image paths associated with properties and display order.
-
-saved_properties — saved/favourited properties for users.
-
-conversations — buyer/owner conversations associated with properties.
-
-messages — messages within conversations, including sender and read-state information.
-
-Storage buckets used by the application:
-
-properties-image — property listing images.
-
-avatars — user profile avatars.
-
-Before running the app against a new Supabase project:
-
-Create the required tables, relationships, indexes, and any RPC functions used by the current code.
-
-Enable and configure Row Level Security for application tables.
-
-Add policies that restrict users to permitted operations and conversation participants to their own conversations and messages.
-
-Configure Storage policies so authenticated users can manage only the files they are allowed to manage.
-
-Configure Supabase Auth redirect URLs for your local and deployed environments.
-
-Verify the schema, policy names, bucket names, and environment variable names against the current source code.
-
-Database setup note: This README documents the application's expected data model; it does not replace a version-controlled SQL migration or a complete Supabase setup script. Use the actual project schema and policies when configuring another environment.
-
-Available scripts
-
-The standard Vite workflow used by this project is:
-
-Command
-
-Purpose
-
-npm run dev
-
-Start the local development server
-
-npm run build
-
-Build the application for production
-
-npm run preview
-
-Preview the production build locally
-
-Run npm run to see every script defined in the current package.json. A lint command is available only if it is defined in that file.
-
-Security considerations
-
-Keep secrets and service-role credentials out of client-side code and version control.
-
-Use Supabase Row Level Security to protect user data and owner-only operations.
-
-Validate and authorize sensitive operations on the server/database side, not only in React components.
-
-Restrict uploads by user, bucket, file type, and size where appropriate.
-
-Do not assume that a public Storage bucket makes its contents private; public files can be retrieved by anyone with access to their URLs.
-
-Configure production Auth redirect URLs and review email verification behaviour before deployment.
-
-Use separate development and production Supabase environments where practical.
-
-Project status and limitations
-
-MyHome is under active development. Its core application flows include property discovery and management, saved properties, account settings, and direct messaging. Some operational details still require verification and polish before the application should be used as a real commercial property service.
-
-In particular:
-
-Demo property details, prices, addresses, and generated imagery may be illustrative and are not proof that a property is available for sale or rent.
-
-Map display depends on valid coordinates and correctly configured location data.
-
-Authentication email-change verification should be tested end to end in the target Supabase environment.
-
-Database policies, upload restrictions, deployment configuration, and error handling should be reviewed before public commercial use.
-
-Features and setup instructions should be checked against the current codebase as it evolves.
+Validate inputs both on client forms and database policy levels.
 
 Roadmap
+[ ] Complete test inventory data.
 
-Planned areas for continued development include:
+[ ] Refine mobile screen responsiveness and touch targets.
 
-Complete and validate the demonstration property inventory.
+[ ] Integrate geocoding API fallback for missing map coordinates.
 
-Refine responsive behaviour and accessibility across core screens.
-
-Improve loading, empty, and error states throughout the application.
-
-Verify property geocoding and map behaviour for listings with missing or invalid coordinates.
-
-Complete end-to-end testing of authentication and account-security flows.
-
-Review Supabase policies, upload validation, and production configuration.
-
-Add repository screenshots and a live demo link once the deployment and visuals are ready to share.
+[ ] Implement end-to-end user testing for chat and booking notifications.
 
 Acknowledgements
-
-MyHome is built with the open-source ecosystem around React, Vite, Tailwind CSS, React Router, TanStack Query, Supabase, Lucide, Motion, React Hook Form, React Hot Toast, and Leaflet. See each dependency's official documentation and licence for details.
+Built using the open-source software ecosystem around React, Vite, Tailwind CSS, Supabase, Lucide, Motion, and Leaflet.
 
 License
-
-No license has been specified in this repository documentation yet. Unless a license file is added, do not assume that the source code is available for reuse, redistribution, or commercial use. Add a LICENSE file once the intended terms have been decided.
-
-MyHome — property discovery designed around clarity, trust, and direct communication.
+Unless otherwise specified, source code rights remain with the repository owner.
